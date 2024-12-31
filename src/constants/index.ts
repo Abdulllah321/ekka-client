@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+import { useAppSelector } from "../store";
 import { Product } from "../utils/types";
 
 export const generateSlug = (name: string): string => {
@@ -31,3 +33,65 @@ export const getPrice = (product: Product) => {
     return product.price;
   }
 };
+
+export const AddressFormFields = [
+  {
+    name: "firstName",
+    label: "First Name",
+    type: "text",
+    placeholder: "First Name",
+    isHalf: true,
+  },
+  {
+    name: "lastName",
+    label: "Last Name",
+    type: "text",
+    placeholder: "Last Name",
+    isHalf: true,
+  },
+  {
+    name: "city",
+    label: "City",
+    type: "text",
+    placeholder: "City",
+    isHalf: true,
+  },
+  {
+    name: "state",
+    label: "State",
+    type: "text",
+    placeholder: "State",
+    isHalf: true,
+  },
+  {
+    name: "street",
+    label: "Street Address",
+    type: "text",
+    placeholder: "Address Line 1",
+    isHalf: false,
+  },
+  {
+    name: "addressType",
+    label: "Address Type",
+    type: "select",
+    options: [
+      { value: "billing", label: "Billing" },
+      { value: "shipping", label: "Shipping" },
+    ],
+    isHalf: false,
+  },
+  {
+    name: "postalCode",
+    label: "Postal Code",
+    type: "text",
+    placeholder: "Postal Code",
+    isHalf: true,
+  },
+  {
+    name: "country",
+    label: "Country",
+    type: "text",
+    placeholder: "Country",
+    isHalf: true,
+  },
+];

@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import LOGO from "../../assets/images/logo/logo.png";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useAppSelector } from "../../store";
+
 const Header = ({ toggleCart }: { toggleCart: () => void }) => {
-  const { cartCount } = useSelector((state: RootState) => state.cart);
+  const { cartCount } = useAppSelector((state) => state.cart);
+  const { items } = useAppSelector((state) => state.wishlist);
 
   return (
     <header className="ec-header">
@@ -106,7 +107,7 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                   <div className="header-icon">
                     <i className="fi-rr-heart" />
                   </div>
-                  <span className="ec-header-count">4</span>
+                  <span className="ec-header-count">{items.length}</span>
                 </Link>
                 {/* Header Cart End */}
                 {/* Header Cart Start */}
@@ -118,7 +119,7 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                   <div className="header-icon">
                     <i className="fi-rr-shopping-bag" />
                   </div>
-                  <span className="ec-header-count cart-count-lable">{cartCount}</span>
+                  <span className="ec-header-count ">{cartCount}</span>
                 </a>
                 {/* Header Cart End */}
                 {/* Header menu Start */}
@@ -206,7 +207,7 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                     <div className="header-icon">
                       <i className="fi-rr-heart" />
                     </div>
-                    <span className="ec-header-count">4</span>
+                    <span className="ec-header-count">{items.length}</span>
                   </Link>
                   {/* Header wishlist End */}
                   {/* Header Cart Start */}
@@ -218,7 +219,7 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                     <div className="header-icon">
                       <i className="fi-rr-shopping-bag" />
                     </div>
-                    <span className="ec-header-count cart-count-lable">3</span>
+                    <span className="ec-header-count ">{cartCount}</span>
                   </a>
                   {/* Header Cart End */}
                 </div>
@@ -235,7 +236,7 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
             {/* Ec Header Logo Start */}
             <div className="col">
               <div className="header-logo">
-                <a href="index.html">
+                <Link to="/">
                   <img src={LOGO} alt="Site Logo" />
                   <img
                     className="dark-logo"
@@ -243,7 +244,7 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                     alt="Site Logo"
                     style={{ display: "none" }}
                   />
-                </a>
+                </Link>
               </div>
             </div>
             {/* Ec Header Logo End */}

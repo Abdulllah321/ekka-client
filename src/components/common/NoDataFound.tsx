@@ -21,7 +21,7 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
         <div className="col-md-6">
           <div className="card text-center shadow-sm">
             <div className="card-body">
-              <h5 className="card-title text-danger">
+              <h5 className="card-title text-danger font-bolder">
                 <i className={`${iconClass} me-2`}></i>
                 {title}
               </h5>

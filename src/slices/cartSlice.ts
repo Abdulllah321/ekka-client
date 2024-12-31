@@ -21,8 +21,6 @@ const initialState: CartState = {
   coupon: null,
 };
 
-// Async Thunks for Cart Operations
-
 // Fetch Cart Items
 export const fetchCart = createAsyncThunk<
   CartItem[],
@@ -79,7 +77,7 @@ export const addToCart = createAsyncThunk<
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data?.message || "Failed to add item to cart"
+      error.response?.data?.error || "Failed to add item to cart"
     );
   }
 });
@@ -220,14 +218,7 @@ const cartSlice = createSlice({
         addToCart.fulfilled,
         (state, action: PayloadAction<CartItem>) => {
           state.loading = false;
-          const existingItem = state.cartItems.find(
-            (item) => item.productId === action.payload.productId
-          );
-          if (existingItem) {
-            existingItem.quantity = action.payload.quantity;
-          } else {
-            state.cartItems.push(action.payload);
-          }
+          state.cartItems.push(action.payload);
         }
       )
       .addCase(addToCart.rejected, (state, action) => {
@@ -291,7 +282,6 @@ const cartSlice = createSlice({
       });
   },
 });
-
 
 // Export the reducer
 export default cartSlice.reducer;

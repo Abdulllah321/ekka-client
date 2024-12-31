@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch, RootState } from "../../store";
+import {  useDispatch } from "react-redux";
+import { AppDispatch,  useAppSelector } from "../../store";
 import {
   applyCoupon,
   getCartCount,
@@ -21,19 +21,24 @@ const CartSidebar = ({
   toggleCart: () => void;
 }) => {
   const dispatch: AppDispatch = useDispatch();
-  const { cartItems, coupon } = useSelector((state: RootState) => state.cart);
+  const { cartItems, coupon } = useAppSelector((state) => state.cart);
 
   const [isCouponPopup, setIsCouponPopup] = useState<boolean>(false);
   const [couponCode, setCouponCode] = useState<string | null>(null);
 
-  const handleRemoveItem = (id: string) => {
-    dispatch(removeFromCart(id));
+  const handleRemoveItem = async (id: string) => {
+    try {
+      await dispatch(removeFromCart(id)).unwrap();
+    } catch (error: any) {
+      console.log(error);
+      toast.error("Failed to remove item from cart");
+    }
   };
 
   const handleUpdateQuantity = async (productId: string, quantity: number) => {
     try {
       await dispatch(updateQuantity({ productId, quantity })).unwrap();
-      await dispatch(getCartCount());
+      await dispatch(getCartCount()).unwrap();
     } catch (error: any) {
       console.log(error);
       toast.error(error || "Failed to update quantity");
@@ -96,52 +101,56 @@ const CartSidebar = ({
                   ×
                 </button>
               </div>
-              <ul className="eccart-pro-items">
-                {cartItems.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      to={`/product/${item.product.id}`}
-                      className="sidekka_pro_img"
-                    >
-                      <img
-                        src={getImageUrl(item.product.thumbnail)}
-                        alt={item.product.name}
-                      />
-                    </Link>
-                    <div className="ec-pro-content">
+              {cartItems.length ? (
+                <ul className="eccart-pro-items">
+                  {cartItems.map((item) => (
+                    <li key={item.id}>
                       <Link
                         to={`/product/${item.product.id}`}
-                        className="cart_pro_title"
+                        className="sidekka_pro_img"
                       >
-                        {item.product.name}
-                      </Link>
-                      <span className="cart-price">
-                        <span>${item.product.price.toFixed(2)}</span> x{" "}
-                        {item.quantity}
-                      </span>
-                      <div className="qty-plus-minus">
-                        <input
-                          className="qty-input"
-                          type="number"
-                          value={item.quantity}
-                          onChange={(e) =>
-                            handleUpdateQuantity(
-                              item.product?.id!,
-                              parseInt(e.target.value, 10)
-                            )
-                          }
+                        <img
+                          src={getImageUrl(item.product.thumbnail)}
+                          alt={item.product.name}
                         />
+                      </Link>
+                      <div className="ec-pro-content">
+                        <Link
+                          to={`/product/${item.product.id}`}
+                          className="cart_pro_title"
+                        >
+                          {item.product.name}
+                        </Link>
+                        <span className="cart-price">
+                          <span>${item.product.price.toFixed(2)}</span> x{" "}
+                          {item.quantity}
+                        </span>
+                        <div className="qty-plus-minus">
+                          <input
+                            className="qty-input"
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) =>
+                              handleUpdateQuantity(
+                                item.product?.id!,
+                                parseInt(e.target.value, 10)
+                              )
+                            }
+                          />
+                        </div>
+                        <button
+                          className="remove"
+                          onClick={() => handleRemoveItem(item.id)}
+                        >
+                          ×
+                        </button>
                       </div>
-                      <button
-                        className="remove"
-                        onClick={() => handleRemoveItem(item.id)}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                "Your cart is empty"
+              )}
             </div>
             <div className="ec-cart-bottom">
               <div className="cart-sub-total">

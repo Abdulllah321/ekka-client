@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store";
+import { useDispatch } from "react-redux";
+import { AppDispatch,  useAppSelector } from "../store";
 import { Link, Navigate } from "react-router";
 import { loginUser } from "../slices/authSlice";
 import Logo from "../assets/images/logo/logo.png";
@@ -10,8 +10,8 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const dispatch: AppDispatch = useDispatch();
 
-  const { isLoading, error, isAuthenticated } = useSelector(
-    (state: RootState) => state.auth
+  const { isLoading, error, isAuthenticated } = useAppSelector(
+    (state) => state.auth
   );
 
   const handleLogin = (e: React.FormEvent) => {

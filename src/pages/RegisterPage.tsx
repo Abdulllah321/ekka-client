@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import Layout from "../components/common/Layout";
 import { User } from "../utils/types";
-import { AppDispatch, RootState } from "../store";
-import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch,  useAppSelector } from "../store";
+import { useDispatch } from "react-redux";
 import { registerUser } from "../slices/authSlice";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router";
+import { DotLoader } from "react-spinners";
 
 const RegisterPage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -19,8 +20,8 @@ const RegisterPage: React.FC = () => {
   });
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { isLoading, error, isAuthenticated } = useSelector(
-    (state: RootState) => state.auth
+  const { isLoading, error, isAuthenticated } = useAppSelector(
+    (state) => state.auth
   );
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -219,7 +220,7 @@ const RegisterPage: React.FC = () => {
                     </span>
                     <span className="ec-register-wrap ec-register-btn">
                       <button className="btn btn-primary" type="submit">
-                        Register
+                        {isLoading ? <DotLoader/>:"Register"}
                       </button>
                     </span>
                   </form>{" "}

@@ -1,6 +1,6 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Layout from "../components/common/Layout";
-import { AppDispatch, RootState } from "../store";
+import { AppDispatch,  useAppSelector } from "../store";
 import Loader from "../components/common/Loader";
 import { CURRENCY, getImageUrl } from "../constants";
 import toast from "react-hot-toast";
@@ -23,8 +23,8 @@ const CartPage = () => {
   const [isDeleting, setIsDeleting] = useState<string>("");
   const [isCouponPopup, setIsCouponPopup] = useState<boolean>(false);
   const [couponCode, setCouponCode] = useState<string | null>(null);
-  const { cartItems, loading, coupon } = useSelector(
-    (state: RootState) => state.cart
+  const { cartItems, loading, coupon } = useAppSelector(
+    (state) => state.cart
   );
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const CartPage = () => {
   const handleQuantityChange = async (productId: string, quantity: number) => {
     try {
       await dispatch(updateQuantity({ productId, quantity })).unwrap();
-      await dispatch(getCartCount())
+      await dispatch(getCartCount()).unwrap()
     } catch (error: any) {
       console.log(error);
       toast.error(error || "Failed to update quantity");

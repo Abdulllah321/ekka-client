@@ -23,7 +23,7 @@ export interface Product {
   soldQuantity?: number | 0;
   mainCategory?: Category;
   discountPercentage?: number;
-  rating?: number;
+  rating: number;
   shippingFee?: number;
 }
 
@@ -57,6 +57,8 @@ export interface Cart {
   subtotal: number;
   deliveryCharge: number;
   totalAmount: number;
+  selectedColor?: string;
+  selectedSize?: string;
 }
 
 // CartItem Interface
@@ -93,4 +95,86 @@ export interface Coupon {
 export enum DiscountType {
   Percentage = "percentage",
   FixedAmount = "fixedAmount",
+}
+
+export interface Address {
+  id?: string;
+  userId?: string;
+  firstName: string;
+  lastName: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  addressType: AddressType;
+}
+export enum AddressType {
+  BILLING = "billing",
+  SHIPPING = "shipping",
+}
+
+export interface Wishlist {
+  id: string; // Unique identifier for the wishlist
+  userId: string; // User ID associated with the wishlist
+  createdAt: Date; // Timestamp when the wishlist was created
+
+  // Relations
+  user: User; // The user associated with the wishlist
+  wishlistItems: WishlistItem[]; // Array of items in the wishlist
+}
+
+export interface WishlistItem {
+  id: string; // Unique identifier for the wishlist item
+  productId: string; // Product ID associated with the item
+  product: Product; // The product details
+
+  // Relations
+  wishlistId: string; // ID of the wishlist this item belongs to
+  wishlist: Wishlist; // The wishlist containing this item
+}
+
+export enum OrderStatus {
+  pending = "pending",
+  processing = "processing",
+  outForDelivery = "outForDelivery",
+  shipped = "shipped",
+  delivered = "delivered",
+  cancelled = "cancelled",
+}
+
+
+export interface Order {
+  id?: string;
+  userId?: string;
+  status?: OrderStatus;
+  totalAmount: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  selectedAddress?: Address;
+  selectedAddressId: string;
+  selectedPaymentMethod: PaymentMethod;
+  orderComment?: string | null;
+  // Relations
+  user?: User; // Assuming a User type exists
+  orderItems?: OrderItem[];
+  expectedDeliveryDays?: number;
+  expectedDeliveryDate?: Date;
+}
+
+export interface OrderItem {
+  id?: string;
+  orderId?: string;
+  productId: string;
+  quantity: number;
+  price: number;
+
+  // Relations
+  order?: Order;
+  product?: Product; // Assuming a Product type exists
+}
+
+export enum PaymentMethod {
+  COD = "COD",
+  RAZORPAY = "RAZORPAY",
 }

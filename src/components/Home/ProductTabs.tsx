@@ -1,5 +1,4 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import {  useAppSelector } from "../../store";
 import Loader from "../common/Loader";
 import toast from "react-hot-toast";
 import { useState } from "react";
@@ -7,8 +6,8 @@ import { Link } from "react-router";
 import ProductCard from "../products/ProductCard";
 
 const ProductTabs = () => {
-  const { products, loading, error } = useSelector(
-    (state: RootState) => state.products
+  const { products, loading, error } = useAppSelector(
+    (state) => state.products
   );
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   // const [quickView, setQuickView] = useState<string>("");

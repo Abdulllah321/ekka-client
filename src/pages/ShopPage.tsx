@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import Layout from "../components/common/Layout";
 import Breadcrumbs from "../components/shop/Breadcrumbs";
-import { AppDispatch, RootState } from "../store";
-import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, useAppSelector } from "../store";
+import { useDispatch } from "react-redux";
 import { fetchProducts } from "../slices/productSlice";
 import ProductCard from "../components/products/ProductCard";
 import { fetchMainCategories } from "../slices/categorySlice";
 import { useSearchParams } from "react-router";
 import { ITEMS_PER_PAGE } from "../constants";
 import Pagination from "../components/common/Pagination";
+import NoDataFound from "../components/common/NoDataFound";
 
 const ShopPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -22,8 +23,8 @@ const ShopPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
-  const { products } = useSelector((state: RootState) => state.products);
-  const { mainCategories } = useSelector((state: RootState) => state.category);
+  const { products } = useAppSelector((state) => state.products);
+  const { mainCategories } = useAppSelector((state) => state.category);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -132,7 +133,7 @@ const ShopPage = () => {
     });
   };
 
-  const handleColor= (color: string) => {
+  const handleColor = (color: string) => {
     setSelectedColors((prev) => {
       if (prev.includes(color)) {
         return prev.filter((s) => s !== color);
@@ -140,7 +141,7 @@ const ShopPage = () => {
         return [...prev, color];
       }
     });
-  }
+  };
 
   return (
     <Layout>
@@ -195,15 +196,24 @@ const ShopPage = () => {
                 <div
                   className={`shop-pro-inner ${isListView ? "list-view" : ""}`}
                 >
-                  <div className="row">
-                    {paginatedProducts.map((product) => (
-                      <ProductCard
-                        key={product.id}
-                        product={product}
-                        isListView={isListView}
+                  {paginatedProducts.length ? (
+                    <div className="row">
+                      {paginatedProducts.map((product) => (
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          isListView={isListView}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="mb-4">
+                      <NoDataFound
+                        title="No Product Found"
+                        message="No Product found for this filtration"
                       />
-                    ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <Pagination

@@ -24,6 +24,7 @@ const Layout = ({ children }: { children?: ReactNode }) => {
           overflowX: "hidden",
         }}
       >
+        
         {children}
       </div>
       <Footer />

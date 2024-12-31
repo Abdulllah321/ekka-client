@@ -1,33 +1,80 @@
-import React from "react";
 import { Product } from "../../utils/types";
 import { Link } from "react-router";
 import { CURRENCY, getImageUrl, getPrice } from "../../constants";
-import { AppDispatch } from "../../store";
+import { AppDispatch, useAppSelector } from "../../store";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../slices/cartSlice";
+import { addToCart, getCartCount } from "../../slices/cartSlice";
 import toast from "react-hot-toast";
+import { addToWishlist, removeFromWishlist } from "../../slices/wishlistslice";
+import { useAuthenticatedAction } from "../../utils/useAuthenticatedAction";
+import { useState } from "react";
 
 const ProductCard = ({
   product,
-  isListView,
+  isListView = false,
+  isWishlist = false,
 }: {
   product: Product;
   isListView: boolean;
+  isWishlist?: boolean;
 }) => {
   const dispatch: AppDispatch = useDispatch();
+  const { items } = useAppSelector((state) => state.wishlist);
+  const [selected, setSelected] = useState<{
+    selectedColor: string | null;
+    selectedSize: string | null;
+  }>({
+    selectedColor: null,
+    selectedSize: null,
+  });
+  const wishlist = items.find((item) => item.productId === product.id);
+  const { execute } = useAuthenticatedAction();
 
   const handleCart = async () => {
-    const cartItem = {
-      productId: product.id,
-      quantity: 1,
-    };
-    try {
-      await dispatch(addToCart(cartItem));
-      toast.success("Item added to cart");
-    } catch (error) {
-      console.log("Failed to add item to cart", error);
-      toast.error(error as string);
-    }
+    execute(async () => {
+      const cartItem = {
+        productId: product.id,
+        quantity: 1,
+        selectedColor: selected.selectedColor,
+        selectedSize: selected.selectedSize,
+      };
+      try {
+        const response = await dispatch(addToCart(cartItem)).unwrap();
+        toast.success("Item added to cart");
+        if (response) await dispatch(getCartCount()).unwrap();
+      } catch (error) {
+        toast.error(error as string);
+      }
+    });
+  };
+
+  const handleWishlist = async () => {
+    execute(async () => {
+      try {
+        if (wishlist) {
+          await dispatch(removeFromWishlist(product.id!)).unwrap();
+          toast.success("Item removed from wishlist");
+        } else {
+          await dispatch(addToWishlist(product.id!)).unwrap();
+          toast.success("Item added to wishlist");
+        }
+      } catch (error) {
+        toast.error(error as string);
+      }
+    });
+  };
+
+  const handleWishlistRemove = async () => {
+    execute(async () => {
+      try {
+        if (wishlist) {
+          await dispatch(removeFromWishlist(product.id!)).unwrap();
+          toast.success("Item removed from wishlist");
+        }
+      } catch (error) {
+        toast.error(error as string);
+      }
+    });
   };
 
   return (
@@ -39,14 +86,34 @@ const ProductCard = ({
       <div className="ec-product-inner">
         <div className="ec-pro-image-outer">
           <div className="ec-pro-image">
-            <Link to={"product-detail/" + product.id} className="image">
+            <Link
+              to={"product-detail/" + product.slug}
+              className="image"
+              style={{
+                width: "100%",
+                height: "250px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+              }}
+            >
               <img
                 className="main-image"
+                style={{
+                  height: "100%",
+                }}
                 src={getImageUrl(product.thumbnail)}
                 alt={product.name}
               />
               <img
                 className="hover-image"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%,-50%)",
+                }}
                 src={
                   getImageUrl(product.imageUrls[0]) ||
                   getImageUrl(product.thumbnail)
@@ -56,6 +123,14 @@ const ProductCard = ({
             </Link>
             {product.discountPercentage && (
               <span className="percentage">{product.discountPercentage}%</span>
+            )}{" "}
+            {isWishlist && (
+              <span
+                className="ec-com-remove ec-remove-wish"
+                onClick={handleWishlistRemove}
+              >
+                <a href="javascript:void(0)">×</a>
+              </span>
             )}
             <a
               href="#"
@@ -82,7 +157,11 @@ const ProductCard = ({
               >
                 <i className="fi-rr-shopping-basket"></i> Add To Cart
               </button>
-              <a className="ec-btn-group wishlist" title="Wishlist">
+              <a
+                className={`ec-btn-group wishlist ${wishlist ? "active" : ""}`}
+                title="Wishlist"
+                onClick={handleWishlist}
+              >
                 <i className="fi-rr-heart"></i>
               </a>
             </div>
@@ -90,9 +169,9 @@ const ProductCard = ({
         </div>
         <div className="ec-pro-content">
           <h5 className="ec-pro-title">
-            <Link to={"product-detail/" + product.id}>{product.name}</Link>
+            <Link to={"product-detail/" + product.slug}>{product.name}</Link>
           </h5>
-          {product.rating && (
+          {product.rating ? (
             <div className="ec-pro-rating">
               {Array.from({ length: 5 }, (_, index) => (
                 <i
@@ -103,7 +182,7 @@ const ProductCard = ({
                 ></i>
               ))}
             </div>
-          )}
+          ) : null}
           <div className="ec-pro-list-desc">{product.description}</div>
           <span className="ec-price">
             {product.price && (
@@ -122,16 +201,21 @@ const ProductCard = ({
               <span className="ec-pro-opt-label">Color</span>
               <ul className="ec-opt-swatch ec-change-img">
                 {product.colors.map((color, index) => (
-                  <li key={index} className={index === 0 ? "active" : ""}>
-                    <a
-                      href="#"
+                  <li
+                    key={index}
+                    className={selected.selectedColor === color ? "active" : ""}
+                    onClick={() =>
+                      setSelected({ ...selected, selectedColor: color })
+                    }
+                  >
+                    <span
                       className="ec-opt-clr-img"
                       data-src={color}
                       data-src-hover={color}
                       data-tooltip={color}
                     >
                       <span style={{ backgroundColor: color }}></span>
-                    </a>
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -140,16 +224,14 @@ const ProductCard = ({
               <span className="ec-pro-opt-label">Size</span>
               <ul className="ec-opt-size">
                 {product.sizes.map((size, index) => (
-                  <li key={index} className={index === 0 ? "active" : ""}>
-                    <a
-                      href="#"
-                      className="ec-opt-sz"
-                      data-old={`$${size}`}
-                      data-new={`$${size}`}
-                      data-tooltip={size}
-                    >
-                      {size}
-                    </a>
+                  <li
+                    key={index}
+                    className={selected.selectedSize === size ? "active" : ""}
+                    onClick={() =>
+                      setSelected({ ...selected, selectedSize: size })
+                    }
+                  >
+                    <a className="ec-opt-sz">{size}</a>
                   </li>
                 ))}
               </ul>

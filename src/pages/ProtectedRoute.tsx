@@ -1,11 +1,9 @@
-import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import {  useAppSelector } from "../store";
 
 const ProtectedRoute = () => {
-  const { isAuthenticated, isLoading } = useSelector(
-    (state: RootState) => state.auth
+  const { isAuthenticated, isLoading } = useAppSelector(
+    (state) => state.auth
   );
   // While loading, show nothing or a loading spinner
   if (isLoading) {

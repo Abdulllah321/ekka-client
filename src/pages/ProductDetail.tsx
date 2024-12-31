@@ -483,7 +483,7 @@ const ProductDetailPage = () => {
                                   name="your-email"
                                   placeholder="Email*"
                                   type="email"
-                                  required=""
+                                  required
                                 />
                               </div>
                               <div className="ec-ratting-input form-submit">

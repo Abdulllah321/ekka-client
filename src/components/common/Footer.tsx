@@ -135,7 +135,7 @@ const Footer = () => {
                           <input
                             className="ec-email"
                             type="email"
-                            required=""
+                            required
                             placeholder="Enter your email here..."
                             name="ec-email"
                             defaultValue=""

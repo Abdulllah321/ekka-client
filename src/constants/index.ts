@@ -1,5 +1,4 @@
-import toast from "react-hot-toast";
-import { useAppSelector } from "../store";
+
 import { Product } from "../utils/types";
 
 export const generateSlug = (name: string): string => {

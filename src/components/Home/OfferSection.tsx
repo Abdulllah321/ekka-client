@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import offerImage from "../../assets/images/offer-image/1.png"; // Adjust path as needed
 

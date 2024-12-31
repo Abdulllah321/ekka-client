@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperInstance } from "swiper";
-import ReactImageMagnify from "react-image-magnify";
 import { Navigation } from "swiper/modules";
 import { getImageUrl } from "../../constants";
 

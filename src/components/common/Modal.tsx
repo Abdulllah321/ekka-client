@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { motion } from "framer-motion";
 
 interface ModalProps {
@@ -10,6 +10,7 @@ interface ModalProps {
   show: boolean; // Control modal visibility
   onClose: () => void; // Function to close the modal
   type?: "primary" | "secondary" | "danger";
+  id?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -21,7 +22,22 @@ const Modal: React.FC<ModalProps> = ({
   show,
   onClose,
   type = "primary",
+  id,
+  ...props
 }) => {
+  // Handle background scrolling
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = ""; // Cleanup on unmount
+    };
+  }, [show]);
+
   // Function to handle backdrop click
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -49,7 +65,9 @@ const Modal: React.FC<ModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          onClick={handleBackdropClick} 
+          onClick={handleBackdropClick}
+          id={id}
+          {...props}
         >
           <motion.div
             className="modal-dialog"
@@ -57,7 +75,16 @@ const Modal: React.FC<ModalProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxHeight: "90vh", 
+              height:"max-content",// Ensure the modal fits within the viewport
+              overflowY: "auto", // Allow scrolling inside the modal
+              width: "80%", // Optional: adjust modal width
+              backgroundColor: "#fff",
+              borderRadius: "8px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
           >
             {/* Modal Content */}
             <div
@@ -65,14 +92,19 @@ const Modal: React.FC<ModalProps> = ({
               style={{
                 display: "flex",
                 flexDirection: "column",
-                height: "max-content",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
+                border: "none",
               }}
             >
               {/* Modal Header */}
-              <div className="modal-header" style={{ padding: "1rem", display: "flex", justifyContent: "space-between" }}>
+              <div
+                className="modal-header"
+                style={{
+                  padding: "1rem",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  borderBottom: "1px solid #dee2e6",
+                }}
+              >
                 <h5 className="modal-title">{title}</h5>
                 <button
                   type="button"
@@ -87,16 +119,23 @@ const Modal: React.FC<ModalProps> = ({
               <div
                 className="modal-body"
                 style={{
-                  padding: "1rem",
-                  overflowY: "auto", // Scrollable when content overflows
-                  flex: 1,
+                  padding: "2rem",
+                  overflowY: "auto",overflowX:"hidden"
                 }}
               >
                 {children}
               </div>
-              {/* Modal Footer */}{" "}
+              {/* Modal Footer */}
               {onSave && (
-                <div className="modal-footer" style={{ padding: "1rem" }}>
+                <div
+                  className="modal-footer"
+                  style={{
+                    padding: "1rem",
+                    borderTop: "1px solid #dee2e6",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
                   <button
                     type="button"
                     className={`btn btn-secondary mr-2`}

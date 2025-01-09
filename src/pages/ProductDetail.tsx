@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Layout from "../components/common/Layout";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AppDispatch, useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
@@ -11,6 +11,14 @@ import ProductImageSliders from "../components/products/ProductImageSliders";
 import "swiper/css";
 import "swiper/css/navigation";
 import { CURRENCY, getPrice } from "../constants";
+import ReviewForm from "../components/products/ProductReviewsForm";
+import Reviews from "../components/products/ProductReviews";
+import RelatedProducts from "../components/products/RelatedProducts";
+import { useAuthenticatedAction } from "../utils/useAuthenticatedAction";
+import { addToCart, getCartCount } from "../slices/cartSlice";
+import { addToWishlist, removeFromWishlist } from "../slices/wishlistslice";
+import QuickViewModal from "../components/products/QuickViewModal ";
+import { AnimatePresence } from "framer-motion";
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
@@ -22,14 +30,34 @@ const ProductDetailPage = () => {
     color: null,
     size: null,
   });
+  const { items } = useAppSelector((state) => state.wishlist);
+  const { cartItems } = useAppSelector((state) => state.cart);
 
   const { productDetails, loading, error } = useAppSelector(
     (state) => state.products
   );
+  const wishlist = items.find((item) => item.productId === productDetails?.id);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [isQuickView, setIsQuickView] = useState<boolean>(false);
+  const [isInCart, setIsInCart] = useState<boolean>(false); // To track if the product is already in the cart
+  const { execute } = useAuthenticatedAction();
 
   useEffect(() => {
     dispatch(fetchProductBySlug(slug!));
-  }, [dispatch]);
+  }, [dispatch, slug]);
+
+  useEffect(() => {
+    // Check if the product is already in the cart
+    const productInCart = cartItems.find(
+      (item) => item.productId === productDetails?.id!
+    );
+    if (productInCart) {
+      setIsInCart(true);
+      setQuantity(productInCart.quantity); // Set the quantity to the one in the cart
+    } else {
+      setIsInCart(false);
+    }
+  }, [items, productDetails?.id]);
 
   if (error) toast.error(error);
 
@@ -54,6 +82,47 @@ const ProductDetailPage = () => {
         <NoDataFound title="No Product Found" />
       </Layout>
     );
+
+  const handleCart = async () => {
+    execute(async () => {
+      const cartItem = {
+        productId: productDetails.id,
+        quantity,
+        selectedColor: null,
+        selectedSize: null,
+      };
+
+      try {
+        if (isInCart) {
+          toast.error("Product is already in the cart");
+        } else {
+          const response = await dispatch(addToCart(cartItem)).unwrap();
+          toast.success("Item added to cart");
+          if (response) await dispatch(getCartCount()).unwrap();
+          setIsInCart(true); // Set to true after adding to cart
+        }
+      } catch (error) {
+        toast.error(error as string);
+      }
+    });
+  };
+
+  const handleWishlist = async () => {
+    execute(async () => {
+      try {
+        if (wishlist) {
+          await dispatch(removeFromWishlist(productDetails.id!)).unwrap();
+          toast.success("Item removed from wishlist");
+        } else {
+          await dispatch(addToWishlist(productDetails.id!)).unwrap();
+          toast.success("Item added to wishlist");
+        }
+      } catch (error) {
+        toast.error(error as string);
+      }
+    });
+  };
+
   return (
     <Layout>
       {/* Breadcrumbs */}
@@ -109,7 +178,8 @@ const ProductDetailPage = () => {
                                       : "eci-star-o"
                                   }`}
                                 />
-                              ))}
+                              ))}{" "}
+                              ({productDetails.rating})
                             </div>
                           ) : (
                             <span className="ec-read-review">
@@ -179,7 +249,7 @@ const ProductDetailPage = () => {
                             <span>SIZE</span>
                             <div className="ec-pro-variation-content">
                               <ul>
-                                {productDetails.sizes.map((size, index) => (
+                                {productDetails?.sizes?.map((size, index) => (
                                   <li
                                     key={index}
                                     className={
@@ -199,26 +269,29 @@ const ProductDetailPage = () => {
                             <span>Color</span>
                             <div className="ec-pro-variation-content">
                               <ul>
-                               
                                 <ul>
-                                  {productDetails.colors.map((color, index) => (
-                                    <li
-                                      key={index}
-                                      className={
-                                        selected.color === color ? "active" : ""
-                                      }
-                                      onClick={() =>
-                                        setSelected({
-                                          ...selected,
-                                          color,
-                                        })
-                                      }
-                                    >
-                                      <span
-                                        style={{ backgroundColor: color }}
-                                      />{" "}
-                                    </li>
-                                  ))}
+                                  {productDetails?.colors?.map(
+                                    (color, index) => (
+                                      <li
+                                        key={index}
+                                        className={
+                                          selected.color === color
+                                            ? "active"
+                                            : ""
+                                        }
+                                        onClick={() =>
+                                          setSelected({
+                                            ...selected,
+                                            color,
+                                          })
+                                        }
+                                      >
+                                        <span
+                                          style={{ backgroundColor: color }}
+                                        />{" "}
+                                      </li>
+                                    )
+                                  )}
                                 </ul>
                               </ul>
                             </div>
@@ -230,23 +303,43 @@ const ProductDetailPage = () => {
                               className="qty-input"
                               type="text"
                               name="ec_qtybtn"
-                              defaultValue={1}
+                              value={quantity}
+                              onChange={(e) =>
+                                setQuantity(Number(e.target.value))
+                              }
+                              disabled={isInCart} // Disable input if product is in cart
                             />
                           </div>
-                          <div className="ec-single-cart ">
-                            <button className="btn btn-primary">
-                              Add To Cart
+                          <div className="ec-single-cart">
+                            <button
+                              className="btn btn-primary"
+                              onClick={handleCart}
+                              disabled={isInCart}
+                            >
+                              {isInCart ? "Already in Cart" : "Add to Cart"}
                             </button>
                           </div>
-                          <div className="ec-single-wishlist">
+                          <div
+                            className="ec-single-wishlist "
+                            onClick={handleWishlist}
+                          >
                             <a
-                              className="ec-btn-group wishlist"
+                              className={`ec-btn-group wishlist ${
+                                wishlist ? "active" : ""
+                              }`}
+                              style={{
+                                color: wishlist ? "#fff" : "#000",
+                                background: wishlist ? "#3474D4" : "#fff",
+                              }}
                               title="Wishlist"
                             >
                               <i className="fi-rr-heart" />
                             </a>
                           </div>
-                          <div className="ec-single-quickview">
+                          <div
+                            className="ec-single-quickview"
+                            onClick={() => setIsQuickView(true)}
+                          >
                             <a
                               href="#"
                               className="ec-btn-group quickview"
@@ -261,6 +354,7 @@ const ProductDetailPage = () => {
                         </div>
                         <div className="ec-single-social">
                           <ul className="mb-0">
+                            {/* TODO: These social media will be dynamic by the vendor profile */}
                             <li className="list-inline-item facebook">
                               <a href="#">
                                 <i className="ecicon eci-facebook" />
@@ -354,39 +448,58 @@ const ProductDetailPage = () => {
                     >
                       <div className="ec-single-pro-tab-desc">
                         <p>
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry's standard dummy text ever since the 1500s,
-                          when an unknown printer took a galley of type and
-                          scrambled it to make a type specimen book. It has
-                          survived not only five centuries, but also the leap
-                          into electronic typesetting, remaining essentially
-                          unchanged.
+                          {productDetails.description ||
+                            "No description available."}
                         </p>
                         <ul>
                           <li>
-                            Any Product types that You want - Simple,
-                            Configurable
+                            {productDetails.shortDesc ||
+                              "No additional details provided."}
                           </li>
-                          <li>
-                            Downloadable/Digital Products, Virtual Products
-                          </li>
-                          <li>Inventory Management with Backordered items</li>
-                          <li>Flatlock seams throughout.</li>
+                          {productDetails?.sizes?.length > 0 && (
+                            <li>
+                              Available Sizes: {productDetails.sizes.join(", ")}
+                            </li>
+                          )}
+                          {productDetails?.colors?.length > 0 && (
+                            <li>
+                              Available Colors:{" "}
+                              {productDetails?.colors?.map((color, index) => (
+                                <span
+                                  key={index}
+                                  style={{
+                                    display: "inline-block",
+                                    width: "20px",
+                                    height: "20px",
+                                    backgroundColor: color,
+                                    border: "1px solid #ccc",
+                                    marginLeft: "5px",
+                                  }}
+                                ></span>
+                              ))}
+                            </li>
+                          )}
                         </ul>
                       </div>
                     </div>
+
+                    {/* Info Tab */}
                     <div id="ec-spt-nav-info" className="tab-pane fade">
                       <div className="ec-single-pro-tab-moreinfo">
                         <ul>
                           <li>
-                            <span>Weight</span> 1000 g
+                            <span>Weight: </span>
+                            {productDetails.weight || "Not specified"}
                           </li>
                           <li>
-                            <span>Dimensions</span> 35 × 30 × 7 cm
+                            <span>Dimensions: </span>
+                            {productDetails.dimensions || "Not specified"}
                           </li>
                           <li>
-                            <span>Color</span> Black, Pink, Red, White
+                            <span>Colors: </span>
+                            {productDetails?.colors?.length > 0
+                              ? productDetails?.colors?.join(", ")
+                              : "Not specified"}
                           </li>
                         </ul>
                       </div>
@@ -394,115 +507,9 @@ const ProductDetailPage = () => {
                     <div id="ec-spt-nav-review" className="tab-pane fade">
                       <div className="row">
                         <div className="ec-t-review-wrapper">
-                          <div className="ec-t-review-item">
-                            <div className="ec-t-review-avtar">
-                              <img
-                                src="assets/images/review-image/1.jpg"
-                                alt=""
-                              />
-                            </div>
-                            <div className="ec-t-review-content">
-                              <div className="ec-t-review-top">
-                                <div className="ec-t-review-name">Jeny Doe</div>
-                                <div className="ec-t-review-rating">
-                                  <i className="ecicon eci-star fill" />
-                                  <i className="ecicon eci-star fill" />
-                                  <i className="ecicon eci-star fill" />
-                                  <i className="ecicon eci-star fill" />
-                                  <i className="ecicon eci-star-o" />
-                                </div>
-                              </div>
-                              <div className="ec-t-review-bottom">
-                                <p>
-                                  Lorem Ipsum is simply dummy text of the
-                                  printing and typesetting industry. Lorem Ipsum
-                                  has been the industry's standard dummy text
-                                  ever since the 1500s, when an unknown printer
-                                  took a galley of type and scrambled it to make
-                                  a type specimen.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="ec-t-review-item">
-                            <div className="ec-t-review-avtar">
-                              <img
-                                src="assets/images/review-image/2.jpg"
-                                alt=""
-                              />
-                            </div>
-                            <div className="ec-t-review-content">
-                              <div className="ec-t-review-top">
-                                <div className="ec-t-review-name">
-                                  Linda Morgus
-                                </div>
-                                <div className="ec-t-review-rating">
-                                  <i className="ecicon eci-star fill" />
-                                  <i className="ecicon eci-star fill" />
-                                  <i className="ecicon eci-star fill" />
-                                  <i className="ecicon eci-star-o" />
-                                  <i className="ecicon eci-star-o" />
-                                </div>
-                              </div>
-                              <div className="ec-t-review-bottom">
-                                <p>
-                                  Lorem Ipsum is simply dummy text of the
-                                  printing and typesetting industry. Lorem Ipsum
-                                  has been the industry's standard dummy text
-                                  ever since the 1500s, when an unknown printer
-                                  took a galley of type and scrambled it to make
-                                  a type specimen.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
+                          <Reviews reviews={productDetails?.reviews!} />
                         </div>
-                        <div className="ec-ratting-content">
-                          <h3>Add a Review</h3>
-                          <div className="ec-ratting-form">
-                            <form action="#">
-                              <div className="ec-ratting-star">
-                                <span>Your rating:</span>
-                                <div className="ec-t-review-rating">
-                                  <i className="ecicon eci-star fill" />
-                                  <i className="ecicon eci-star fill" />
-                                  <i className="ecicon eci-star-o" />
-                                  <i className="ecicon eci-star-o" />
-                                  <i className="ecicon eci-star-o" />
-                                </div>
-                              </div>
-                              <div className="ec-ratting-input">
-                                <input
-                                  name="your-name"
-                                  placeholder="Name"
-                                  type="text"
-                                />
-                              </div>
-                              <div className="ec-ratting-input">
-                                <input
-                                  name="your-email"
-                                  placeholder="Email*"
-                                  type="email"
-                                  required
-                                />
-                              </div>
-                              <div className="ec-ratting-input form-submit">
-                                <textarea
-                                  name="your-commemt"
-                                  placeholder="Enter Your Comment"
-                                  defaultValue={""}
-                                />
-                                <button
-                                  className="btn btn-primary"
-                                  type="submit"
-                                  value="Submit"
-                                >
-                                  Submit
-                                </button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
+                        <ReviewForm productId={productDetails.id!} id={slug!} />
                       </div>
                     </div>
                   </div>
@@ -513,6 +520,19 @@ const ProductDetailPage = () => {
           </div>
         </div>
       </section>
+      <RelatedProducts products={productDetails.relatedProducts!} />
+
+      <AnimatePresence>
+        <QuickViewModal
+          product={productDetails}
+          isOpen={isQuickView}
+          onClose={() => setIsQuickView(false)}
+          quantity={quantity}
+          setQuantity={setQuantity}
+          onAddToCart={handleCart}
+          isProductInCart={isInCart}
+        />
+      </AnimatePresence>
     </Layout>
   );
 };

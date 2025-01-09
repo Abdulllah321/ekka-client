@@ -3,10 +3,21 @@ import { useAppSelector } from "../store";
 import ProductCard from "../components/products/ProductCard";
 import Loader from "../components/common/Loader";
 import NotFound from "../components/common/NoDataFound";
+import { useState } from "react";
 
 const WishListPage = () => {
   const { items, loading } = useAppSelector((state) => state.wishlist);
+  const [viewModalProductSlug, setViewModalProductSlug] = useState<
+    string | null
+  >(null);
 
+  const handleOpenModal = (slug: string) => {
+    setViewModalProductSlug(slug);
+  };
+
+  const handleCloseModal = () => {
+    setViewModalProductSlug(null);
+  };
   if (loading) {
     return (
       <Layout>
@@ -14,7 +25,7 @@ const WishListPage = () => {
       </Layout>
     );
   }
-  console.log(items)
+  console.log(items);
   if (items.length === 0) {
     return (
       <Layout>
@@ -53,30 +64,36 @@ const WishListPage = () => {
           </div>
         </div>
       </div>
-      {items.map((item) => (
-        <section className="ec-page-content section-space-p">
-          <div className="container">
-            <div className="row">
-              {/* Compare Content Start */}
-              <div className="ec-wish-rightside col-lg-12 col-md-12">
-                {/* Compare content Start */}
-                <div className="ec-compare-content">
-                  <div className="ec-compare-inner">
-                    <div className="row margin-minus-b-30">
+      <section className="ec-page-content section-space-p">
+        <div className="container">
+          <div className="row">
+            {/* Compare Content Start */}
+            <div className="ec-wish-rightside col-lg-12 col-md-12">
+              {/* Compare content Start */}
+              <div className="ec-compare-content">
+                <div className="ec-compare-inner">
+                  <div className="row margin-minus-b-30">
+                    {" "}
+                    {items.map((item) => (
                       <ProductCard
                         key={item.id}
                         isListView={false}
                         product={item.product}
                         isWishlist={true}
+                        isViewModelOpen={
+                          viewModalProductSlug === item.product.slug
+                        }
+                        onOpenModal={() => handleOpenModal(item.product.slug)}
+                        onCloseModal={handleCloseModal}
                       />
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
-      ))}
+        </div>
+      </section>
     </Layout>
   );
 };

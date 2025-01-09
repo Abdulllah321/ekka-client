@@ -28,13 +28,13 @@ const ProductImageSliders: React.FC<ProductImageSlidersProps> = ({
   }, [productDetails]);
 
   const handleSlideChange = (swiper: any) => {
-    const index = swiper.realIndex; // realIndex gives the correct index in loop mode
+    const index = swiper.realIndex;
     setActiveIndex(index);
   };
 
   const handleThumbnailClick = (index: number) => {
     if (swiperInstance) {
-      swiperInstance.slideTo(index); // Jump to the clicked thumbnail's corresponding slide
+      swiperInstance.slideTo(index);
     }
   };
 
@@ -53,6 +53,7 @@ const ProductImageSliders: React.FC<ProductImageSlidersProps> = ({
             alt={productDetails.name}
             style={{
               width: "100%",
+              cursor: "normal", // Set cursor to normal
             }}
           />
         </SwiperSlide>
@@ -63,6 +64,7 @@ const ProductImageSliders: React.FC<ProductImageSlidersProps> = ({
               alt={productDetails.name}
               style={{
                 width: "100%",
+                cursor: "normal", // Set cursor to normal
               }}
             />
           </SwiperSlide>
@@ -103,6 +105,7 @@ const ProductImageSliders: React.FC<ProductImageSlidersProps> = ({
                   ? "3px solid #6D88C2"
                   : "3px solid transparent",
               transition: ".5s all",
+              cursor: "normal", // Set cursor to normal
             }}
             src={getImageUrl(productDetails?.thumbnail!)}
             alt={productDetails.name}
@@ -134,6 +137,7 @@ const ProductImageSliders: React.FC<ProductImageSlidersProps> = ({
                     ? "3px solid #6D88C2"
                     : "3px solid transparent",
                 transition: ".5s all",
+                cursor: "normal", // Set cursor to normal
               }}
               src={getImageUrl(img)}
               alt={productDetails.name}

@@ -100,21 +100,22 @@ export const deleteOrder = createAsyncThunk<
   }
 });
 
-export const fetchOrderByUser = createAsyncThunk(
-  "orders/fetchOrderByUser",
-  async (userId: string, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`/orders?userId=${userId}`, {
-        withCredentials: true,
-      });
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.error || "Failed to fetch orders by user"
-      );
-    }
+export const fetchOrderByUser = createAsyncThunk<
+  Order[],
+  void,
+  { rejectValue: string }
+>("orders/fetchOrderByUser", async (_, { rejectWithValue }) => {
+  try {
+    const response = await axios.get(`/orders/user`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.error || "Failed to fetch orders by user"
+    );
   }
-);
+});
 
 // Slice
 const ordersSlice = createSlice({

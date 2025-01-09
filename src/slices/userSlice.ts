@@ -1,11 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Address } from "../utils/types";
-
-
+import { Address, User } from "../utils/types";
 
 interface UserState {
-  userDetails: Record<string, any> | null;
+  userDetails: User;
   addresses: Address[];
   loading: boolean;
   error: string | null;
@@ -77,11 +75,14 @@ export const addAddress = createAsyncThunk(
 export const updateAddress = createAsyncThunk(
   "user/updateAddress",
   async (
-    { addressId, address }: { addressId: string; address: Record<string, any> },
+    { addressId, address }: { addressId: string; address: Address },
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.put(`${API_URL}/address/${addressId}`, address);
+      const response = await axios.put(
+        `${API_URL}/address/${addressId}`,
+        address
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -109,7 +110,7 @@ const userSlice = createSlice({
     addresses: [],
     loading: false,
     error: null,
-  } as UserState,
+  } as unknown as UserState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -118,27 +119,39 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchUserDetails.fulfilled, (state, action: PayloadAction<Record<string, any>>) => {
-        state.loading = false;
-        state.userDetails = action.payload;
-      })
-      .addCase(fetchUserDetails.rejected, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+      .addCase(
+        fetchUserDetails.fulfilled,
+        (state, action: PayloadAction<User>) => {
+          state.loading = false;
+          state.userDetails = action.payload;
+        }
+      )
+      .addCase(
+        fetchUserDetails.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+        }
+      )
       // Update user details
       .addCase(updateUserDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateUserDetails.fulfilled, (state, action: PayloadAction<Record<string, any>>) => {
-        state.loading = false;
-        state.userDetails = action.payload;
-      })
-      .addCase(updateUserDetails.rejected, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+      .addCase(
+        updateUserDetails.fulfilled,
+        (state, action: PayloadAction<User>) => {
+          state.loading = false;
+          state.userDetails = action.payload;
+        }
+      )
+      .addCase(
+        updateUserDetails.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload;
+        }
+      )
       // Delete user
       .addCase(deleteUser.pending, (state) => {
         state.loading = true;
@@ -146,7 +159,7 @@ const userSlice = createSlice({
       })
       .addCase(deleteUser.fulfilled, (state) => {
         state.loading = false;
-        state.userDetails = null;
+        state.userDetails = {} as User;
         state.addresses = [];
       })
       .addCase(deleteUser.rejected, (state, action: PayloadAction<any>) => {
@@ -159,10 +172,13 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchAddresses.fulfilled, (state, action: PayloadAction<Address[]>) => {
-        state.loading = false;
-        state.addresses = action.payload;
-      })
+      .addCase(
+        fetchAddresses.fulfilled,
+        (state, action: PayloadAction<Address[]>) => {
+          state.loading = false;
+          state.addresses = action.payload;
+        }
+      )
       .addCase(fetchAddresses.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
@@ -172,10 +188,13 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(addAddress.fulfilled, (state, action: PayloadAction<Address>) => {
-        state.loading = false;
-        state.addresses.push(action.payload);
-      })
+      .addCase(
+        addAddress.fulfilled,
+        (state, action: PayloadAction<Address>) => {
+          state.loading = false;
+          state.addresses.push(action.payload);
+        }
+      )
       .addCase(addAddress.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
@@ -185,15 +204,18 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateAddress.fulfilled, (state, action: PayloadAction<Address>) => {
-        state.loading = false;
-        const index = state.addresses.findIndex(
-          (addr) => addr.id === action.payload.id
-        );
-        if (index !== -1) {
-          state.addresses[index] = action.payload;
+      .addCase(
+        updateAddress.fulfilled,
+        (state, action: PayloadAction<Address>) => {
+          state.loading = false;
+          const index = state.addresses.findIndex(
+            (addr) => addr.id === action.payload.id
+          );
+          if (index !== -1) {
+            state.addresses[index] = action.payload;
+          }
         }
-      })
+      )
       .addCase(updateAddress.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;

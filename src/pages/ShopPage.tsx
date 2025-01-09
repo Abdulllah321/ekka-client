@@ -23,6 +23,10 @@ const ShopPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+
+  const [viewModalProductSlug, setViewModalProductSlug] = useState<
+    string | null
+  >(null);
   const { products } = useAppSelector((state) => state.products);
   const { mainCategories } = useAppSelector((state) => state.category);
 
@@ -143,6 +147,14 @@ const ShopPage = () => {
     });
   };
 
+  const handleOpenModal = (slug: string) => {
+    setViewModalProductSlug(slug);
+  };
+
+  const handleCloseModal = () => {
+    setViewModalProductSlug(null);
+  };
+
   return (
     <Layout>
       <Breadcrumbs />
@@ -203,6 +215,11 @@ const ShopPage = () => {
                           key={product.id}
                           product={product}
                           isListView={isListView}
+                          isViewModelOpen={
+                            viewModalProductSlug === product.slug
+                          }
+                          onOpenModal={() => handleOpenModal(product.slug)}
+                          onCloseModal={handleCloseModal}
                         />
                       ))}
                     </div>

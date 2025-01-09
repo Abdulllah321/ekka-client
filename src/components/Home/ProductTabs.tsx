@@ -1,4 +1,4 @@
-import {  useAppSelector } from "../../store";
+import { useAppSelector } from "../../store";
 import Loader from "../common/Loader";
 import toast from "react-hot-toast";
 import { useState } from "react";
@@ -9,6 +9,17 @@ const ProductTabs = () => {
   const { products, loading, error } = useAppSelector(
     (state) => state.products
   );
+  const [viewModalProductSlug, setViewModalProductSlug] = useState<
+    string | null
+  >(null);
+
+  const handleOpenModal = (slug: string) => {
+    setViewModalProductSlug(slug);
+  };
+
+  const handleCloseModal = () => {
+    setViewModalProductSlug(null);
+  };
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   // const [quickView, setQuickView] = useState<string>("");
 
@@ -80,6 +91,9 @@ const ProductTabs = () => {
                       product={product}
                       key={product.id}
                       isListView={false}
+                      isViewModelOpen={viewModalProductSlug === product.slug}
+                      onOpenModal={() => handleOpenModal(product.slug)}
+                      onCloseModal={handleCloseModal}
                     />
                   ))}
 

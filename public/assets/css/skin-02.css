@@ -31652,7 +31652,6 @@ input[type=email]:focus::-webkit-input-placeholder {
 .ec-user-account .ec-vendor-block-bg {
   width: 100%;
   height: 200px;
-  background-image: url(../images/banner/8.jpg) !important;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

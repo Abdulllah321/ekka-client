@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { AppDispatch,  useAppSelector } from "./store";
+import { AppDispatch, useAppSelector } from "./store";
 import Loader from "./components/common/Loader";
 import axios from "axios";
 import { fetchCart, getCartCount } from "./slices/cartSlice";
@@ -21,6 +21,10 @@ const ProductDetail = React.lazy(() => import("./pages/ProductDetail"));
 const WishListPage = React.lazy(() => import("./pages/WishListPage"));
 const OrderSuccessPage = React.lazy(() => import("./pages/OrderSuccessPage"));
 const TrackOrderPage = React.lazy(() => import("./pages/TrackOrderPage"));
+const LogoutPage = React.lazy(() => import("./pages/LogoutPage"));
+const ProfilePage = React.lazy(() => import("./pages/ProfilePage"));
+const OrdersPage = React.lazy(() => import("./pages/OrdersPage"));
+const InvoicePage = React.lazy(() => import("./pages/InvoicePage"));
 
 function App() {
   const dispatch: AppDispatch = useDispatch();
@@ -56,10 +60,14 @@ function App() {
           <Route path="/product-detail/:slug" element={<ProductDetail />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/logout" element={<LogoutPage />} />
             <Route path="/wishlist" element={<WishListPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/order-success/:id" element={<OrderSuccessPage />} />
             <Route path="/order/:id" element={<TrackOrderPage />} />
+            <Route path="/invoice/:id" element={<InvoicePage />} />
+            <Route path="/orders" element={<OrdersPage />} />
           </Route>
         </Routes>
       </Suspense>

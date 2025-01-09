@@ -10,6 +10,7 @@ import {
 } from "./slices/categorySlice";
 import wishlistReducer from "./slices/wishlistslice";
 import orderReducer from "./slices/orderSlice";
+import reviewsReducer from "./slices/reviewSlice";
 import authProtectionMiddleware from "./middleware";
 import { useSelector } from "react-redux";
 
@@ -23,12 +24,12 @@ export const store = configureStore({
     coupons: couponReducer,
     user: userReducer,
     wishlist: wishlistReducer,
-    order:orderReducer
+    order: orderReducer,
+    review: reviewsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authProtectionMiddleware),
 });
-
 
 export type RootState = ReturnType<typeof store.getState>;
 export const useAppSelector = useSelector.withTypes<RootState>();

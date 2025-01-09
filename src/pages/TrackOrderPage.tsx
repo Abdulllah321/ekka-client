@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import Layout from "../components/common/Layout";
 import { AppDispatch, useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
@@ -9,6 +9,7 @@ import Loader from "../components/common/Loader";
 import { OrderStatus } from "../utils/types";
 import { CURRENCY, getImageUrl, getPrice } from "../constants";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { FaFileInvoice } from "react-icons/fa";
 const TrackOrderPage = () => {
   const { id } = useParams();
   const dispatch: AppDispatch = useDispatch();
@@ -33,7 +34,7 @@ const TrackOrderPage = () => {
   const orderSteps = [
     OrderStatus.pending,
     OrderStatus.processing,
-    "Out for Delivery",
+    OrderStatus.outForDelivery,
     OrderStatus.shipped,
     OrderStatus.delivered,
   ];
@@ -119,7 +120,10 @@ const TrackOrderPage = () => {
                               />
                             </span>
                             <span className="ec-progressbar-track" />
-                            <span className="ec-track-title">{orderStep}</span>
+                            <span className="ec-track-title">
+                              {" "}
+                              {orderStep.replace(/([A-Z])/g, " $1")}
+                            </span>
                           </li>
                         );
                       })}
@@ -158,8 +162,17 @@ const TrackOrderPage = () => {
                     Order Detail
                     <br />
                     <span className="small">Order ID: #{currentOrder?.id}</span>
-                  </h2>
+                  </h2>{" "}
                 </div>
+                <Link to={`/invoice/${id}`}>
+                <button
+                  className="btn btn-primary"
+                  style={{ marginLeft: "10px", width: "calc(100% - 20px)" }}
+                  >
+                  <FaFileInvoice style={{ marginRight: "8px" }} />
+                  Generate Invoice
+                </button>
+                  </Link>
                 <div className="card-body">
                   <div
                     className="row"

@@ -25,6 +25,8 @@ export interface Product {
   discountPercentage?: number;
   rating: number;
   shippingFee?: number;
+  reviews?: Review[];
+  relatedProducts?: Product[];
 }
 
 export interface Category {
@@ -75,11 +77,18 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  password: string;
+  password?: string;
   confirmPassword?: string;
   phoneNumber: string;
+  profileImage?: string;
+  role: UserRole;
+  coverPhoto?: string;
 }
 
+export enum UserRole {
+  customer,
+  vendor,
+}
 export interface Coupon {
   id: string;
   code: string;
@@ -143,7 +152,6 @@ export enum OrderStatus {
   cancelled = "cancelled",
 }
 
-
 export interface Order {
   id?: string;
   userId?: string;
@@ -177,4 +185,14 @@ export interface OrderItem {
 export enum PaymentMethod {
   COD = "COD",
   RAZORPAY = "RAZORPAY",
+}
+
+export interface Review {
+  id: string;
+  rating: number;
+  comment?: string;
+  createdAt?: string;
+  productId: string;
+  userId?: string;
+  user?: User;
 }

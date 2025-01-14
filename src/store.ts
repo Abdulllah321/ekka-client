@@ -11,26 +11,34 @@ import {
 import wishlistReducer from "./slices/wishlistslice";
 import orderReducer from "./slices/orderSlice";
 import reviewsReducer from "./slices/reviewSlice";
+import vendorReducer from "./slices/vendorSlice";
+import storeReducer from "./slices/storeSlice";
 import authProtectionMiddleware from "./middleware";
-import { useSelector } from "react-redux";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 export const store = configureStore({
   reducer: {
     products: productReducer,
     cart: cartReducer,
     auth: authReducer,
-    category: mainCategoryReducer,
+    categories: mainCategoryReducer,
     subcategories: subCategoryReducer,
     coupons: couponReducer,
     user: userReducer,
     wishlist: wishlistReducer,
     order: orderReducer,
     review: reviewsReducer,
+    vendor: vendorReducer,
+    store: storeReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authProtectionMiddleware),
 });
 
+// Define RootState and AppDispatch types
 export type RootState = ReturnType<typeof store.getState>;
-export const useAppSelector = useSelector.withTypes<RootState>();
 export type AppDispatch = typeof store.dispatch;
+
+// Custom hooks for useSelector and useDispatch
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useAppDispatch: () => AppDispatch = useDispatch;

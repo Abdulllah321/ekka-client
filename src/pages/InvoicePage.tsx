@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import { AppDispatch, useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
@@ -8,28 +8,16 @@ import Loader from "../components/common/Loader";
 import { ProfileSidebar } from "./ProfilePage";
 import { CURRENCY } from "../constants";
 import Layout from "../components/common/Layout";
-
-const generateInvoiceId = () => {
-  // Get the current timestamp
-  const timestamp = Date.now();
-  // Generate a random number between 1000 and 9999 (4 digits)
-  const randomNum = Math.floor(Math.random() * 9000) + 1000;
-
-  // Combine the timestamp and random number for uniqueness
-  const invoiceId = `${timestamp.toString().slice(-5)}${randomNum
-    .toString()
-    .slice(-3)}`;
-
-  return invoiceId;
-};
+import html2canvas from "html2canvas";
+import * as XLSX from "xlsx";
+import { toPng } from "html-to-image";
+import generatePDF from "react-to-pdf";
 
 const Invoice = () => {
   const { id } = useParams();
   const dispatch: AppDispatch = useDispatch();
   const { currentOrder, loading } = useAppSelector((state) => state.order);
-
-  // Generate dynamic invoice ID
-  const invoiceId = generateInvoiceId();
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     dispatch(getOrderById(id!));
@@ -47,6 +35,93 @@ const Invoice = () => {
 
   if (loading) return <Loader />;
 
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const exportPDF = () => {
+    generatePDF(invoiceRef, { filename: "invoice.pdf" });
+  };
+
+  const exportImage = async () => {
+    if (invoiceRef.current) {
+      // Use html2canvas to capture the invoice content as an image
+      const canvas = await html2canvas(invoiceRef.current);
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = "invoice.png"; // Change to desired image format
+      link.click();
+    }
+  };
+
+  const exportExcel = () => {
+    const orderDetails = [
+      { Label: "Order ID", Value: currentOrder.id },
+      {
+        Label: "User Name",
+        Value: `${currentOrder?.user?.firstName} ${currentOrder?.user?.lastName}`,
+      },
+      { Label: "User Email", Value: currentOrder.user?.email || "" },
+      { Label: "User Phone", Value: currentOrder.user?.phoneNumber ?? "N/A" },
+      {
+        Label: "Shipping Address",
+        Value: `${currentOrder.selectedAddress?.street ?? "N/A"}, ${
+          currentOrder.selectedAddress?.city ?? "N/A"
+        }, ${currentOrder.selectedAddress?.state ?? "N/A"}, ${
+          currentOrder.selectedAddress?.country ?? "N/A"
+        }`,
+      },
+      { Label: "Total Amount", Value: currentOrder.totalAmount },
+      { Label: "Payment Method", Value: currentOrder.selectedPaymentMethod },
+      {
+        Label: "Expected Delivery Date",
+        Value: new Date(
+          currentOrder.expectedDeliveryDate ?? Date.now()
+        ).toLocaleDateString(),
+      },
+      { Label: "Status", Value: currentOrder.status },
+    ];
+
+    const orderItems = currentOrder?.orderItems?.map((item) => ({
+      "Product ID": item.productId,
+      "Product Name": item.product?.name,
+      Quantity: item.quantity,
+      Price: item.price,
+      Amount: (item.quantity * item.price).toFixed(2),
+    }));
+
+    const worksheet1 = XLSX.utils.json_to_sheet(orderDetails, {
+      header: ["Label", "Value"],
+    });
+    const worksheet2 = XLSX.utils.json_to_sheet(orderItems || [], {
+      header: ["Product ID", "Product Name", "Quantity", "Price", "Amount"],
+    });
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet1, "Order Details");
+    XLSX.utils.book_append_sheet(workbook, worksheet2, "Order Items");
+
+    XLSX.writeFile(workbook, "order_invoice.xlsx");
+  };
+
+  const handleExport = (type: string) => {
+    switch (type) {
+      case "pdf":
+        exportPDF();
+        break;
+      case "image":
+        exportImage(); // Call exportImage instead of exportPNG
+        break;
+
+      case "excel":
+        exportExcel();
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <Layout>
       <section className="ec-page-content ec-vendor-uploads ec-user-account section-space-p">
@@ -60,19 +135,71 @@ const Invoice = () => {
               <div className="ec-vendor-dashboard-card">
                 <div className="ec-vendor-card-header">
                   <h5>Invoice</h5>
-                  <div className="ec-header-btn">
-                    <a className="btn btn-lg btn-secondary" href="#">
+                  <div
+                    id="ec-header-btn"
+                    className="ec-header-btn"
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: 2,
+                    }}
+                  >
+                    <button
+                      className="btn btn-secondary "
+                      type="button"
+                      onClick={handlePrint}
+                    >
                       Print
-                    </a>
-                    <a className="btn btn-lg btn-primary" href="#">
-                      Export
-                    </a>
+                    </button>
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-primary dropdown-toggle"
+                        type="button"
+                        id="exportDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Export Options
+                      </button>
+                      <ul
+                        className="dropdown-menu"
+                        aria-labelledby="exportDropdown"
+                      >
+                        <li>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => handleExport("pdf")}
+                          >
+                            Export PDF
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => handleExport("excel")}
+                          >
+                            Export Excel
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => handleExport("image")}
+                          >
+                            Export Image
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-                <div className="ec-vendor-card-body padding-b-0">
+                <div
+                  className="ec-vendor-card-body padding-b-0"
+                  ref={invoiceRef}
+                >
                   <div className="page-content">
                     <div className="page-header text-blue-d2">
-                      <img src="assets/images/logo/logo.png" alt="Site Logo" />
+                      <img src="/assets/images/logo/logo.png" alt="Site Logo" />
                     </div>
 
                     <div className="container px-0">

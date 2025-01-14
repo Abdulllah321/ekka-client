@@ -32,6 +32,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
     firstName: "",
     lastName: "",
   });
+
   // Update state when the form fields change
   const onInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -41,10 +42,12 @@ const AddressForm: React.FC<AddressFormProps> = ({
     handleChange(event); // Pass the change event to the parent
   };
 
-  // Sync initial values with the form data when they change
+  // Sync initial values with the form data when they change, but avoid unnecessary updates
   useEffect(() => {
-    setFormData(initialValues);
-  }, [initialValues]);
+    if (JSON.stringify(initialValues) !== JSON.stringify(formData)) {
+      setFormData(initialValues); // Update form data only if initialValues have changed
+    }
+  }, [initialValues, formData]); // Add formData as a dependency to avoid infinite loop
 
   return (
     <form>

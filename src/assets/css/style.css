@@ -30215,8 +30215,9 @@ input[type=email]:focus::-webkit-input-placeholder {
 .ec-vendor-dashboard .ec-vendor-dashboard-card .ec-vendor-card-body .ec-table tbody tr td span,
 .ec-vendor-uploads .ec-vendor-dashboard-card .ec-vendor-card-body .ec-table tbody tr th span,
 .ec-vendor-uploads .ec-vendor-dashboard-card .ec-vendor-card-body .ec-table tbody tr td span {
-  padding: 14px 0 !important;
+  padding: 14px 5px !important;
   display: block;
+  text-transform: capitalize;
 }
 .ec-vendor-dashboard .ec-vendor-dashboard-card .ec-vendor-card-body .ec-table tbody tr th .btn,
 .ec-vendor-dashboard .ec-vendor-dashboard-card .ec-vendor-card-body .ec-table tbody tr td .btn,

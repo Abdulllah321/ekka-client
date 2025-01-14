@@ -18,7 +18,7 @@ export const MAX_RATING = 5;
 export const CURRENCY = "$";
 
 export const getImageUrl = (url: string) => {
-  if (url.startsWith("uploads")) {
+  if (url?.startsWith("uploads")) {
     return `${IMAGE_BASE_URL}${url}`;
   } else {
     return url;

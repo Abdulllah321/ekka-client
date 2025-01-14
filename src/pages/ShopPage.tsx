@@ -28,7 +28,7 @@ const ShopPage = () => {
     string | null
   >(null);
   const { products } = useAppSelector((state) => state.products);
-  const { mainCategories } = useAppSelector((state) => state.category);
+  const { mainCategories } = useAppSelector((state) => state.categories);
 
   useEffect(() => {
     dispatch(fetchProducts());

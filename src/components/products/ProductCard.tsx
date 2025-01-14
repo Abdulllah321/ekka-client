@@ -146,11 +146,11 @@ const ProductCard = ({
                   alt={product.name}
                 />
               </Link>
-              {product.discountPercentage && (
+              {product.discountPercentage ? (
                 <span className="percentage">
                   {product.discountPercentage}%
                 </span>
-              )}
+              ) : null}
               {isWishlist && (
                 <span
                   className="ec-com-remove ec-remove-wish"

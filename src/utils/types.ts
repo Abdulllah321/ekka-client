@@ -27,6 +27,8 @@ export interface Product {
   shippingFee?: number;
   reviews?: Review[];
   relatedProducts?: Product[];
+  userId?: string;
+  storeId?: string;
 }
 
 export interface Category {
@@ -86,21 +88,24 @@ export interface User {
 }
 
 export enum UserRole {
-  customer,
-  vendor,
+  customer = "customer",
+  vendor = "vendor",
 }
 export interface Coupon {
-  id: string;
+  id?: string;
   code: string;
   description?: string;
   discountAmount: number;
   discountType: DiscountType;
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | string;
+  endDate: Date | string;
   status: "active" | "inactive" | "expired";
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  storeId?: string;
+  products?: Product[] | string[];
 }
+
 export enum DiscountType {
   Percentage = "percentage",
   FixedAmount = "fixedAmount",
@@ -168,6 +173,7 @@ export interface Order {
   orderItems?: OrderItem[];
   expectedDeliveryDays?: number;
   expectedDeliveryDate?: Date;
+  storeIds: string[];
 }
 
 export interface OrderItem {
@@ -195,4 +201,53 @@ export interface Review {
   productId: string;
   userId?: string;
   user?: User;
+}
+
+enum Status {
+  active = "active",
+  inactive = "inactive",
+}
+export interface Store {
+  id: string; // Unique identifier for the store
+  name: string; // Store name
+  slug: string; // Unique slug for the store
+  description?: string; // Optional store description
+  logo?: string; // Optional URL or path to the store logo
+  bannerImage?: string; // Optional URL or path to the store banner
+  contactEmail: string; // Contact email for the store
+  contactPhone?: string; // Optional contact phone for the store
+  address?: string; // Optional store address
+  createdAt: Date; // Timestamp of store creation
+  updatedAt: Date; // Timestamp of last update
+  status: Status; // Active or inactive status
+  ownerId: string; // ID of the store owner
+  owner: User; // User relation (store owner)
+  rating?: number; // Average rating of the store (optional)
+  reviewsCount: number; // Total number of reviews
+  socialLinks?: SocialLinks; // Optional social media links for the store
+
+  // Customization options
+  themeColor?: string; // Optional hex code for the store's theme color
+  isCustomizable: boolean; // Whether the store allows customization
+  customFields?: Record<string, any>; // Optional custom fields for additional store options
+  paymentMethods?: Record<string, any>; // Optional accepted payment methods (e.g., COD, Razorpay)
+  shippingPolicies?: string; // Optional shipping policies of the store
+  returnPolicies?: string; // Optional return policies of the store
+
+  // Relations
+  products: Product[]; // List of products related to the store
+  coupons: Coupon[]; // List of coupons related to the store
+  orders: Order[]; // List of orders related to the store
+}
+
+export interface SocialLinks {
+  id: string; // Unique identifier for the social links
+  storeId: string; // Unique identifier for the associated store
+  store: Store; // Relation to the Store model
+  facebook?: string; // Optional Facebook link
+  instagram?: string; // Optional Instagram link
+  twitter?: string; // Optional Twitter link
+  linkedin?: string; // Optional LinkedIn link
+  youtube?: string; // Optional YouTube link
+  website?: string; // Optional website link for the store
 }

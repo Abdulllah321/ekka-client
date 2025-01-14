@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/common/Layout";
 import { AppDispatch, useAppSelector } from "../store";
 import Loader from "../components/common/Loader";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Modal from "../components/common/Modal"; // Assume a Modal component exists
 import { useDispatch } from "react-redux";
 import {
@@ -28,7 +28,6 @@ const ProfilePage = () => {
     loading,
     addresses,
   } = useAppSelector((state) => state.user);
-
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState<User>({
     firstName: user?.firstName || "",
@@ -495,6 +494,9 @@ const ProfilePage = () => {
 
 export default ProfilePage;
 export function ProfileSidebar() {
+  const navigate = useNavigate();
+  const role = useAppSelector((state) => state.auth.user?.role);
+
   return (
     <div className="ec-shop-leftside ec-vendor-sidebar col-lg-3 col-md-12">
       <div className="ec-sidebar-wrap ec-border-box">
@@ -505,7 +507,6 @@ export function ProfileSidebar() {
                 <li>
                   <Link to="/profile">User Profile</Link>
                 </li>
-
                 <li>
                   <Link to="/wishlist">Wishlist</Link>
                 </li>
@@ -516,7 +517,31 @@ export function ProfileSidebar() {
                   <Link to="/checkout">Checkout</Link>
                 </li>
                 <li>
+                  <Link to="/change-password">Change Password</Link>
+                </li>
+                <li>
                   <Link to="/orders">Orders</Link>
+                </li>
+                {/* Add Upgrade to Vendor Button */}
+                <li>
+                  <button
+                    className="btn btn-primary"
+                    style={{
+                      marginTop: "10px",
+                      width: "100%",
+                    }}
+                    onClick={() => {
+                      navigate(
+                        role === UserRole.customer
+                          ? "/upgrade-to-vendor"
+                          : "/vendor/dashboard"
+                      );
+                    }}
+                  >
+                    {role === UserRole.customer
+                      ? " Upgrade to Vendor"
+                      : "Vendor Dashboard"}
+                  </button>
                 </li>
               </ul>
             </div>

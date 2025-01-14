@@ -7,10 +7,29 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #3474D4;
+  background-color: #3474d4;
   color: #fff;
   font-weight: bold;
   font-size: 18px;
   border-radius: 50%;
   text-transform: uppercase;
+}
+
+@media print {
+  header,
+  footer,
+  #ec-header-btn,
+  .ec-header,
+  .ec-shop-leftside.ec-vendor-sidebar,
+  .ec-vendor-card-header {
+    display: none !important;
+  }
+}
+
+label {
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+.invalid-feedback {
+  color: red;
 }

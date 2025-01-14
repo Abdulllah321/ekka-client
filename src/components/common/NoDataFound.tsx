@@ -1,10 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 interface NoDataFoundProps {
   title: string;
   message?: string;
   buttonText?: string; // Make buttonText optional
-  buttonLink?: string; // Make buttonLink optional
+  buttonLink?: string | (() => void); // buttonLink can be a string (URL) or a function
   iconClass?: string; // Optional icon class
 }
 
@@ -15,6 +16,15 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
   buttonLink,
   iconClass = "bi bi-exclamation-circle", // Default icon if none provided
 }) => {
+  const navigate = useNavigate();
+  const handleButtonClick = () => {
+    if (typeof buttonLink === "function") {
+      buttonLink();
+    } else if (typeof buttonLink === "string") {
+      navigate(buttonLink);
+    }
+  };
+
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
@@ -26,10 +36,10 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
                 {title}
               </h5>
               {message && <p className="card-text">{message}</p>}
-              {buttonText && buttonLink && (
-                <a href={buttonLink} className="btn btn-primary">
+              {buttonText && (
+                <button onClick={handleButtonClick} className="btn btn-primary">
                   {buttonText}
-                </a>
+                </button>
               )}
             </div>
           </div>

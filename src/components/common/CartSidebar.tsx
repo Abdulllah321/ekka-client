@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import {  useDispatch } from "react-redux";
-import { AppDispatch,  useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import {
   applyCoupon,
   getCartCount,
@@ -20,7 +19,7 @@ const CartSidebar = ({
   isCartBarVisible: boolean;
   toggleCart: () => void;
 }) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { cartItems, coupon } = useAppSelector((state) => state.cart);
 
   const [isCouponPopup, setIsCouponPopup] = useState<boolean>(false);

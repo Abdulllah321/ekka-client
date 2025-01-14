@@ -3,20 +3,21 @@ import LOGO from "../../assets/images/logo/logo.png";
 import { useAppSelector } from "../../store";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { UserRole } from "../../utils/types";
 
 const Header = ({ toggleCart }: { toggleCart: () => void }) => {
   const { cartCount } = useAppSelector((state) => state.cart);
   const { items } = useAppSelector((state) => state.wishlist);
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const [isMenu, setIsMenu] = useState(false);
   const location = useLocation();
 
   const toggleMobileMenu = () => {
     setIsMenu(!isMenu);
   };
-    const isActive = (path: string) => {
-      return location.pathname === path ? "active" : "";
-    };
+  const isActive = (path: string) => {
+    return location.pathname === path ? "active" : "";
+  };
 
   return (
     <header className="ec-header">
@@ -214,6 +215,14 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                     <ul className="dropdown-menu dropdown-menu-right">
                       {isAuthenticated ? (
                         <li>
+                          {UserRole.vendor === user?.role && (
+                            <Link
+                              to="/vendor/dashboard"
+                              className="dropdown-item"
+                            >
+                              Vendor Dashboard
+                            </Link>
+                          )}
                           <Link className="dropdown-item" to="/profile">
                             My Account
                           </Link>
@@ -389,6 +398,14 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                   {isAuthenticated ? (
                     <>
                       <li>
+                        {UserRole.vendor === user?.role && (
+                          <Link
+                            to="/vendor/dashboard"
+                            className="text-dark p-2 d-block"
+                          >
+                            Vendor Dashboard
+                          </Link>
+                        )}
                         <Link to="/profile" className="text-dark p-2 d-block">
                           My Account
                         </Link>

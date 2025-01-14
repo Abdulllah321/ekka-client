@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { AppDispatch,  useAppSelector } from "../store";
+import { AppDispatch, useAppSelector } from "../store";
 import { Link, Navigate } from "react-router";
 import { loginUser } from "../slices/authSlice";
 import Logo from "../assets/images/logo/logo.png";
+import toast from "react-hot-toast";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState<string>("");
@@ -14,9 +15,13 @@ const LoginPage: React.FC = () => {
     (state) => state.auth
   );
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginUser({ email: username, password }));
+    try {
+      await dispatch(loginUser({ email: username, password })).unwrap();
+    } catch (err: any) {
+      toast.error(err.message);
+    }
   };
 
   if (isAuthenticated) {
@@ -68,6 +73,12 @@ const LoginPage: React.FC = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                       />
+                      <small
+                        className="text-primary"
+                        style={{ float: "right", marginTop: 10 }}
+                      >
+                        <Link to={`/forgot-password`}>Forgot Password?</Link>
+                      </small>
                     </div>
 
                     <div className="col-md-12">
@@ -82,7 +93,9 @@ const LoginPage: React.FC = () => {
                   </div>
                 </form>
                 {error && (
-                  <div className="alert alert-danger">{error}</div>
+                  <div className="alert alert-danger">
+                    {typeof error === "string" ? error : error?.message}
+                  </div>
                 )}{" "}
               </div>
             </div>

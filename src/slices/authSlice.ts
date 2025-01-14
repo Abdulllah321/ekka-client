@@ -6,7 +6,7 @@ interface AuthState {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  error: string | null;
+  error: any;
 }
 
 // Initial State
@@ -110,11 +110,23 @@ export const requestPasswordReset = createAsyncThunk(
 export const resetPasswordWithOtp = createAsyncThunk(
   "auth/resetPasswordWithOtp",
   async (
-    resetData: { email: string; otpCode: string; newPassword: string },
+    resetData: { email: string; newPassword: string },
     { rejectWithValue }
   ) => {
     try {
       const response = await axios.post(`/auth/reset-password`, resetData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+// Reset Password with OTP
+export const verifyOtp = createAsyncThunk(
+  "auth/verifyOtp",
+  async (resetData: { email: string; otp: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`/auth/verify-otp`, resetData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -142,14 +154,11 @@ const authSlice = createSlice({
       .addCase(checkUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(
-        checkUser.fulfilled,
-        (state, action: PayloadAction<{ user: User }>) => {
-          state.isLoading = false;
-          state.user = action.payload.user;
-          state.isAuthenticated = true;
-        }
-      )
+      .addCase(checkUser.fulfilled, (state, action: PayloadAction<User>) => {
+        state.isLoading = false;
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
       .addCase(checkUser.rejected, (state) => {
         state.isLoading = false;
         state.user = null;
@@ -223,7 +232,18 @@ const authSlice = createSlice({
           state.isLoading = false;
           state.error = action.payload;
         }
-      );
+      )
+      // verify Otp
+      .addCase(verifyOtp.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(verifyOtp.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(verifyOtp.rejected, (state, action: PayloadAction<any>) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
   },
 });
 

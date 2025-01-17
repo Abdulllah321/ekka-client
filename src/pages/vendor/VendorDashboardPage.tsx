@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../store";
 import VendorDashboardStats from "../../components/store/VendorDashboardStats";
@@ -47,19 +47,19 @@ const VendorDashboardPage = () => {
     ) || 0;
 
   // Calculate current month stats
-  const currentMonth = new Date().getMonth();
-  const currentMonthOrders =
-    orders?.filter(
-      (order) => new Date(order.createdAt!).getMonth() === currentMonth
-    ) || [];
-  const currentMonthEarnings = currentMonthOrders.reduce(
-    (acc, order) => acc + order.totalAmount,
-    0
-  );
-  const currentMonthProductsSold = currentMonthOrders.reduce(
-    (acc, order) => acc + (order.orderItems?.length || 0),
-    0
-  );
+  // const currentMonth = new Date().getMonth();
+  // const currentMonthOrders =
+  //   orders?.filter(
+  //     (order) => new Date(order.createdAt!).getMonth() === currentMonth
+  //   ) || [];
+  // const currentMonthEarnings = currentMonthOrders.reduce(
+  //   (acc, order) => acc + order.totalAmount,
+  //   0
+  // );
+  // const currentMonthProductsSold = currentMonthOrders.reduce(
+  //   (acc, order) => acc + (order.orderItems?.length || 0),
+  //   0
+  // );
 
   const storeStats = {
     products: userStore?.products?.length || 0,
@@ -68,11 +68,11 @@ const VendorDashboardPage = () => {
     totalProductsSold,
   };
 
-  const currentMonthStats = {
-    orders: currentMonthOrders.length,
-    earnings: currentMonthEarnings,
-    productsSold: currentMonthProductsSold,
-  };
+  // const currentMonthStats = {
+  //   orders: currentMonthOrders.length,
+  //   earnings: currentMonthEarnings,
+  //   productsSold: currentMonthProductsSold,
+  // };
 
   return (
     <VendorLayout>
@@ -102,7 +102,7 @@ const VendorDashboardPage = () => {
         <div className="ec-vendor-card-header">
           <h5>Current Month Details</h5>
         </div>
-        <MonthlyDetailsChart stats={currentMonthStats} />
+        <MonthlyDetailsChart />
       </div>
     </VendorLayout>
   );

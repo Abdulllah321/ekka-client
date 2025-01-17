@@ -1,7 +1,6 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import ImageUpload from "../common/ImageUpload";
-import { getImageUrl } from "../../constants";
 
 interface StoreAssetsFormProps {
   onNext: (data: any) => void;
@@ -18,15 +17,13 @@ const StoreAssetsForm: React.FC<StoreAssetsFormProps> = ({
   formData,
   setFormData,
 }) => {
-  const { register, handleSubmit, formState } = useForm({
+  const { handleSubmit } = useForm({
     defaultValues: formData,
   });
 const isFormValid = formData.logo && formData.bannerImage;
 const isFormDirty = Boolean(
   formData.logo !== null || formData.bannerImage !== null
 );
-
-  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
 
   const onSubmit = (data: any) => {
     onNext(data);

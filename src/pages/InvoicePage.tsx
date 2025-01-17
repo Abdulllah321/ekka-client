@@ -10,7 +10,6 @@ import { CURRENCY } from "../constants";
 import Layout from "../components/common/Layout";
 import html2canvas from "html2canvas";
 import * as XLSX from "xlsx";
-import { toPng } from "html-to-image";
 import generatePDF from "react-to-pdf";
 
 const Invoice = () => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../components/common/Layout";
-import { User } from "../utils/types";
+import { User, UserRole } from "../utils/types";
 import { AppDispatch,  useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../slices/authSlice";
@@ -17,6 +17,7 @@ const RegisterPage: React.FC = () => {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
+    role: UserRole.customer,
   });
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Record<string, string>>({});

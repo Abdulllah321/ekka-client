@@ -39,7 +39,7 @@ const ProductDetailPage = () => {
   const wishlist = items.find((item) => item.productId === productDetails?.id);
   const [quantity, setQuantity] = useState<number>(1);
   const [isQuickView, setIsQuickView] = useState<boolean>(false);
-  const [isInCart, setIsInCart] = useState<boolean>(false); // To track if the product is already in the cart
+  const [isInCart, setIsInCart] = useState<boolean>(false);
   const { execute } = useAuthenticatedAction();
 
   useEffect(() => {
@@ -47,13 +47,12 @@ const ProductDetailPage = () => {
   }, [dispatch, slug]);
 
   useEffect(() => {
-    // Check if the product is already in the cart
     const productInCart = cartItems.find(
       (item) => item.productId === productDetails?.id!
     );
     if (productInCart) {
       setIsInCart(true);
-      setQuantity(productInCart.quantity); // Set the quantity to the one in the cart
+      setQuantity(productInCart.quantity);
     } else {
       setIsInCart(false);
     }

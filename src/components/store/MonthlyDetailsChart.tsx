@@ -1,4 +1,3 @@
-import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -19,7 +18,7 @@ ChartJS.register(
   Legend
 );
 
-const EnhancedChart: React.FC = () => {
+const EnhancedChart = () => {
   const data = {
     labels: ["Orders", "Earnings ($)", "Products Sold"],
     datasets: [

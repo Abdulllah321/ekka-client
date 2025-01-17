@@ -1,4 +1,3 @@
-import React from "react";
 import { Review } from "../../utils/types";
 
 const Reviews = ({ reviews }: { reviews: Review[] }) => {

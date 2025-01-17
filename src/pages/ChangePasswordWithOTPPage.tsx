@@ -20,7 +20,6 @@ const ChangePasswordPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [decodedEmail, setDecodedEmail] = useState<string | null>(null);
-  const [decodedOtp, setDecodedOtp] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -31,16 +30,7 @@ const ChangePasswordPage = () => {
       const decryptedEmail = emailBytes.toString(CryptoJS.enc.Utf8);
       setDecodedEmail(decryptedEmail);
 
-      const otpBytes = CryptoJS.AES.decrypt(
-        decodeURIComponent(otp || ""),
-        import.meta.env.VITE_SECRET_KEY
-      );
-      const decryptedOtp = otpBytes.toString(CryptoJS.enc.Utf8);
-      setDecodedOtp(decryptedOtp);
 
-      if (!decryptedEmail || !decryptedOtp) {
-        throw new Error("Decryption failed.");
-      }
     } catch (error) {
       toast.error("Invalid or tampered data.");
       navigate("/forgot-password");

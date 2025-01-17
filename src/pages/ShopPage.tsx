@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { fetchProducts } from "../slices/productSlice";
 import ProductCard from "../components/products/ProductCard";
 import { fetchMainCategories } from "../slices/categorySlice";
-import { useSearchParams } from "react-router";
+import { useSearchParams } from "react-router-dom";
 import { ITEMS_PER_PAGE } from "../constants";
 import Pagination from "../components/common/Pagination";
 import NoDataFound from "../components/common/NoDataFound";

@@ -1,7 +1,7 @@
 import React from "react";
 import { Order } from "../../utils/types";
 import { CURRENCY, getImageUrl } from "../../constants";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import OrderStatusTd from "./OrderStatusTd";
 import { useAppDispatch } from "../../store";

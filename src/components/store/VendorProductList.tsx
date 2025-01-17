@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Product } from "../../utils/types";
 import { CURRENCY, getImageUrl } from "../../constants";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import Modal from "../common/Modal";
 import { useAppDispatch } from "../../store";
 import { deleteProduct } from "../../slices/productSlice";
@@ -88,9 +88,7 @@ const ProductList: React.FC<ProductListProps> = ({
                       </span>
                     </td>
                     <td>
-                      <span
-                        className={``}
-                      >
+                      <span className={``}>
                         {product.status.charAt(0).toUpperCase() +
                           product.status.slice(1)}
                       </span>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "../store";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { requestPasswordReset } from "../slices/authSlice";
 import Logo from "../assets/images/logo/logo.png";
 import Layout from "../components/common/Layout";

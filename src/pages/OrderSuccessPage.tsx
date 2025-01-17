@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router";
+import { Link, useParams } from "react-router-dom";
 import { AppDispatch, useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
@@ -38,7 +38,7 @@ const OrderSuccessPage = () => {
     0;
 
   const discount = subtotal + deliveryCharge - currentOrder.totalAmount;
-  
+
   return (
     <Layout>
       <div

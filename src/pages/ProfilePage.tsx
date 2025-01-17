@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/common/Layout";
 import { AppDispatch, useAppSelector } from "../store";
 import Loader from "../components/common/Loader";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import Modal from "../components/common/Modal"; // Assume a Modal component exists
 import { useDispatch } from "react-redux";
 import {

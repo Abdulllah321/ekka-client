@@ -15,7 +15,7 @@ import Loader from "../components/common/Loader";
 import NoDataFound from "../components/common/NoDataFound";
 import { ClipLoader } from "react-spinners";
 import { createOrder } from "../slices/orderSlice";
-import { Navigate, useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const CheckoutPage = () => {
   const dispatch: AppDispatch = useDispatch();

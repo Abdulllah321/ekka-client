@@ -6,7 +6,7 @@ import {
   removeFromCart,
   updateQuantity,
 } from "../../slices/cartSlice";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { CURRENCY, getImageUrl } from "../../constants";
 import { useState } from "react";
 import { fetchCouponByCode } from "../../slices/couponSlice";

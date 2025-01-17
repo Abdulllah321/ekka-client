@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { AppDispatch, useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
 import { getOrderById } from "../slices/orderSlice";

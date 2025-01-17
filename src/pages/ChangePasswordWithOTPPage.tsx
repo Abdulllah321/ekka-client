@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../components/common/BreadCrumbs";
@@ -29,8 +29,6 @@ const ChangePasswordPage = () => {
       );
       const decryptedEmail = emailBytes.toString(CryptoJS.enc.Utf8);
       setDecodedEmail(decryptedEmail);
-
-
     } catch (error) {
       toast.error("Invalid or tampered data.");
       navigate("/forgot-password");

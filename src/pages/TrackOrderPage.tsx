@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router";
+import { Link, useParams } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import { AppDispatch, useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
@@ -165,14 +165,14 @@ const TrackOrderPage = () => {
                   </h2>{" "}
                 </div>
                 <Link to={`/invoice/${id}`}>
-                <button
-                  className="btn btn-primary"
-                  style={{ marginLeft: "10px", width: "calc(100% - 20px)" }}
+                  <button
+                    className="btn btn-primary"
+                    style={{ marginLeft: "10px", width: "calc(100% - 20px)" }}
                   >
-                  <FaFileInvoice style={{ marginRight: "8px" }} />
-                  Generate Invoice
-                </button>
-                  </Link>
+                    <FaFileInvoice style={{ marginRight: "8px" }} />
+                    Generate Invoice
+                  </button>
+                </Link>
                 <div className="card-body">
                   <div
                     className="row"

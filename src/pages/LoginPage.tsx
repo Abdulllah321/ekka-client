@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "../store";
-import { Link, Navigate } from "react-router";
+import { Link, Navigate } from "react-router-dom";
 import { loginUser } from "../slices/authSlice";
 import Logo from "../assets/images/logo/logo.png";
 import toast from "react-hot-toast";

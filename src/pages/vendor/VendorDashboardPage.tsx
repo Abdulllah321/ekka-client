@@ -1,5 +1,5 @@
-import  { useEffect } from "react";
-import { Navigate, useNavigate } from "react-router";
+import { useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import VendorDashboardStats from "../../components/store/VendorDashboardStats";
 import LatestOrder from "../../components/store/VendorOrders";

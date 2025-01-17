@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Layout from "../components/common/Layout";
 import { User, UserRole } from "../utils/types";
-import { AppDispatch,  useAppSelector } from "../store";
+import { AppDispatch, useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../slices/authSlice";
 import toast from "react-hot-toast";
-import { Navigate, useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router-dom";
 import { DotLoader } from "react-spinners";
 
 const RegisterPage: React.FC = () => {
@@ -221,7 +221,7 @@ const RegisterPage: React.FC = () => {
                     </span>
                     <span className="ec-register-wrap ec-register-btn">
                       <button className="btn btn-primary" type="submit">
-                        {isLoading ? <DotLoader/>:"Register"}
+                        {isLoading ? <DotLoader /> : "Register"}
                       </button>
                     </span>
                   </form>{" "}

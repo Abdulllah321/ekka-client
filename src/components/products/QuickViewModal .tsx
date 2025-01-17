@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Product } from "../../utils/types";
 import ProductImageSliders from "./ProductImageSliders";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { CURRENCY } from "../../constants";
 
 interface QuickViewModalProps {

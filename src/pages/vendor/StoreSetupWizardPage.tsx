@@ -10,7 +10,7 @@ import { motion } from "framer-motion"; // Import Framer Motion
 import toast from "react-hot-toast";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { createNewStore } from "../../slices/storeSlice";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const StoreSetupWizard: React.FC = () => {
   const [step, setStep] = useState(1);

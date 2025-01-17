@@ -4,7 +4,7 @@ import Layout from "../components/common/Layout";
 import Breadcrumbs from "../components/common/BreadCrumbs";
 import { useAppSelector } from "../store";
 import { socket } from "../App";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const VerifyVendor = () => {
   const [password, setPassword] = useState("");

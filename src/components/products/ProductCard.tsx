@@ -1,5 +1,5 @@
 import { Product } from "../../utils/types";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { CURRENCY, getImageUrl, getPrice } from "../../constants";
 import { AppDispatch, useAppSelector } from "../../store";
 import { useDispatch } from "react-redux";

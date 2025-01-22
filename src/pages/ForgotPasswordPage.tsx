@@ -48,11 +48,11 @@ const LoginPage: React.FC = () => {
               <div className="card">
                 <div className="card-header bg-primary-1">
                   <div className="ec-brand" style={{ textAlign: "center" }}>
-                    <Link to="/" title="Ekka">
+                    <Link to="/" title="Vastra">
                       <img
                         className="ec-brand-icon"
                         src={Logo}
-                        alt="Ekka Logo"
+                        alt="Vastra Logo"
                       />
                     </Link>
                   </div>

@@ -1,4 +1,3 @@
-
 const CategorySidebar = () => {
   return (
     <>
@@ -327,7 +326,7 @@ const CategorySidebar = () => {
                 <div className="ec-sb-pro-sl-item">
                   <a
                     href="product-left-sidebar.html"
-                    className="sidekka_pro_img"
+                    className="sidVastra_pro_img"
                   >
                     <img
                       src="assets/images/product-image/1.jpg"
@@ -356,7 +355,7 @@ const CategorySidebar = () => {
                 <div className="ec-sb-pro-sl-item">
                   <a
                     href="product-left-sidebar.html"
-                    className="sidekka_pro_img"
+                    className="sidVastra_pro_img"
                   >
                     <img
                       src="assets/images/product-image/2.jpg"
@@ -387,7 +386,7 @@ const CategorySidebar = () => {
                 <div className="ec-sb-pro-sl-item">
                   <a
                     href="product-left-sidebar.html"
-                    className="sidekka_pro_img"
+                    className="sidVastra_pro_img"
                   >
                     <img
                       src="assets/images/product-image/3.jpg"
@@ -416,7 +415,7 @@ const CategorySidebar = () => {
                 <div className="ec-sb-pro-sl-item">
                   <a
                     href="product-left-sidebar.html"
-                    className="sidekka_pro_img"
+                    className="sidVastra_pro_img"
                   >
                     <img
                       src="assets/images/product-image/4.jpg"
@@ -445,7 +444,7 @@ const CategorySidebar = () => {
                 <div className="ec-sb-pro-sl-item">
                   <a
                     href="product-left-sidebar.html"
-                    className="sidekka_pro_img"
+                    className="sidVastra_pro_img"
                   >
                     <img
                       src="assets/images/product-image/5.jpg"
@@ -474,7 +473,7 @@ const CategorySidebar = () => {
                 <div className="ec-sb-pro-sl-item">
                   <a
                     href="product-left-sidebar.html"
-                    className="sidekka_pro_img"
+                    className="sidVastra_pro_img"
                   >
                     <img
                       src="assets/images/product-image/6.jpg"
@@ -505,7 +504,7 @@ const CategorySidebar = () => {
                 <div className="ec-sb-pro-sl-item">
                   <a
                     href="product-left-sidebar.html"
-                    className="sidekka_pro_img"
+                    className="sidVastra_pro_img"
                   >
                     <img
                       src="assets/images/product-image/7.jpg"
@@ -536,7 +535,7 @@ const CategorySidebar = () => {
                 <div className="ec-sb-pro-sl-item">
                   <a
                     href="product-left-sidebar.html"
-                    className="sidekka_pro_img"
+                    className="sidVastra_pro_img"
                   >
                     <img
                       src="assets/images/product-image/2.jpg"

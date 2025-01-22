@@ -106,7 +106,7 @@ const CartSidebar = ({
                     <li key={item.id}>
                       <Link
                         to={`/product/${item.product.id}`}
-                        className="sidekka_pro_img"
+                        className="sidVastra_pro_img"
                       >
                         <img
                           src={getImageUrl(item.product.thumbnail)}

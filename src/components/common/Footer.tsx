@@ -1,4 +1,3 @@
-
 const Footer = () => {
   return (
     <footer className="ec-footer section-space-mt">
@@ -22,13 +21,8 @@ const Footer = () => {
                 <div className="ec-footer-widget">
                   <div className="ec-footer-logo">
                     <a href="#">
-                      <img src="assets/images/logo/footer-logo.png" alt="" />
-                      <img
-                        className="dark-footer-logo"
-                        src="assets/images/logo/dark-logo.png"
-                        alt="Site Logo"
-                        style={{ display: "none" }}
-                      />
+                      <img src="/assets/images/logo/footer-logo.png" alt="" />
+                      
                     </a>
                   </div>
                   <h4 className="ec-footer-heading">Contact us</h4>
@@ -199,7 +193,7 @@ const Footer = () => {
                   <div className="ec-copy">
                     Copyright © <span id="copyright_year" />{" "}
                     <a className="site-name text-upper" href="#">
-                      ekka<span>.</span>
+                      Vastra<span>.</span>
                     </a>
                     . All Rights Reserved
                   </div>
@@ -221,6 +215,6 @@ const Footer = () => {
       </div>
     </footer>
   );
-}
+};
 
-export default Footer
+export default Footer;

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer className="ec-footer section-space-mt">
@@ -6,10 +8,8 @@ const Footer = () => {
           <div className="container">
             <div className="row">
               <div className="text-center footer-off-msg">
-                <span>Win a contest! Get this limited-editon</span>
-                <a href="#" target="_blank">
-                  View Detail
-                </a>
+                <span>Win a contest! Get this limited-edition</span>
+                <Link to="/contest">View Detail</Link>
               </div>
             </div>
           </div>
@@ -20,16 +20,18 @@ const Footer = () => {
               <div className="col-sm-12 col-lg-3 ec-footer-contact">
                 <div className="ec-footer-widget">
                   <div className="ec-footer-logo">
-                    <a href="#">
-                      <img src="/assets/images/logo/footer-logo.png" alt="" />
-                      
-                    </a>
+                    <Link to="/">
+                      <img
+                        src="/assets/images/logo/footer-logo.png"
+                        alt="Logo"
+                      />
+                    </Link>
                   </div>
                   <h4 className="ec-footer-heading">Contact us</h4>
                   <div className="ec-footer-links">
-                    <ul className="align-items-center">
+                    <ul>
                       <li className="ec-footer-link">
-                        71 Pilgrim Avenue Chevy Chase, east california.
+                        71 Pilgrim Avenue Chevy Chase, East California.
                       </li>
                       <li className="ec-footer-link">
                         <span>Call Us:</span>
@@ -38,7 +40,7 @@ const Footer = () => {
                       <li className="ec-footer-link">
                         <span>Email:</span>
                         <a href="mailto:example@ec-email.com">
-                          +example@ec-email.com
+                          example@ec-email.com
                         </a>
                       </li>
                     </ul>
@@ -48,107 +50,82 @@ const Footer = () => {
               <div className="col-sm-12 col-lg-2 ec-footer-info">
                 <div className="ec-footer-widget">
                   <h4 className="ec-footer-heading">Information</h4>
-                  <div className="ec-footer-links">
-                    <ul className="align-items-center">
-                      <li className="ec-footer-link">
-                        <a href="about-us.html">About us</a>
-                      </li>
-                      <li className="ec-footer-link">
-                        <a href="faq.html">FAQ</a>
-                      </li>
-                      <li className="ec-footer-link">
-                        <a href="track-order.html">Delivery Information</a>
-                      </li>
-                      <li className="ec-footer-link">
-                        <a href="contact-us.html">Contact us</a>
-                      </li>
-                    </ul>
-                  </div>
+                  <ul>
+                    <li>
+                      <Link to="/about">About us</Link>
+                    </li>
+                    <li>
+                      <Link to="/faq">FAQ</Link>
+                    </li>
+                    <li>
+                      <Link to="/delivery">Delivery Information</Link>
+                    </li>
+                    <li>
+                      <Link to="/contact">Contact us</Link>
+                    </li>
+                  </ul>
                 </div>
               </div>
               <div className="col-sm-12 col-lg-2 ec-footer-account">
                 <div className="ec-footer-widget">
                   <h4 className="ec-footer-heading">Account</h4>
-                  <div className="ec-footer-links">
-                    <ul className="align-items-center">
-                      <li className="ec-footer-link">
-                        <a href="user-profile.html">My Account</a>
-                      </li>
-                      <li className="ec-footer-link">
-                        <a href="track-order.html">Order History</a>
-                      </li>
-                      <li className="ec-footer-link">
-                        <a href="wishlist.html">Wish List</a>
-                      </li>
-                      <li className="ec-footer-link">
-                        <a href="offer.html">Specials</a>
-                      </li>
-                    </ul>
-                  </div>
+                  <ul>
+                    <li>
+                      <Link to="/profile">My Account</Link>
+                    </li>
+                    <li>
+                      <Link to="/orders">Order History</Link>
+                    </li>
+                    <li>
+                      <Link to="/wishlist">Wish List</Link>
+                    </li>
+                    <li>
+                      <Link to="/shop">Shop</Link>
+                    </li>
+                  </ul>
                 </div>
               </div>
               <div className="col-sm-12 col-lg-2 ec-footer-service">
                 <div className="ec-footer-widget">
                   <h4 className="ec-footer-heading">Services</h4>
-                  <div className="ec-footer-links">
-                    <ul className="align-items-center">
-                      <li className="ec-footer-link">
-                        <a href="track-order.html">Discount Returns</a>
-                      </li>
-                      <li className="ec-footer-link">
-                        <a href="privacy-policy.html">Policy &amp; policy </a>
-                      </li>
-                      <li className="ec-footer-link">
-                        <a href="terms-condition.html">Customer Service</a>
-                      </li>
-                      <li className="ec-footer-link">
-                        <a href="terms-condition.html">Term &amp; condition</a>
-                      </li>
-                    </ul>
-                  </div>
+                  <ul>
+                    <li>
+                      <Link to="/returns">Discount Returns</Link>
+                    </li>
+                    <li>
+                      <Link to="/privacy-policy">Privacy Policy</Link>
+                    </li>
+                    <li>
+                      <Link to="/customer-service">Customer Service</Link>
+                    </li>
+                    <li>
+                      <Link to="/terms">Terms & Conditions</Link>
+                    </li>
+                  </ul>
                 </div>
               </div>
               <div className="col-sm-12 col-lg-3 ec-footer-news">
                 <div className="ec-footer-widget">
                   <h4 className="ec-footer-heading">Newsletter</h4>
-                  <div className="ec-footer-links">
-                    <ul className="align-items-center">
-                      <li className="ec-footer-link">
-                        Get instant updates about our new products and special
-                        promos!
-                      </li>
-                    </ul>
-                    <div className="ec-subscribe-form">
-                      <form
-                        id="ec-newsletter-form"
-                        name="ec-newsletter-form"
-                        method="post"
-                        action="#"
-                      >
-                        <div id="ec_news_signup" className="ec-form">
-                          <input
-                            className="ec-email"
-                            type="email"
-                            required
-                            placeholder="Enter your email here..."
-                            name="ec-email"
-                            defaultValue=""
-                          />
-                          <button
-                            id="ec-news-btn"
-                            className="button btn-primary"
-                            type="submit"
-                            name="subscribe"
-                            value=""
-                          >
-                            <i
-                              className="ecicon eci-paper-plane-o"
-                              aria-hidden="true"
-                            />
-                          </button>
-                        </div>
-                      </form>
-                    </div>
+                  <p>
+                    Get instant updates about our new products and special
+                    promos!
+                  </p>
+                  <div className="ec-subscribe-form">
+                    <form>
+                      <input
+                        className="ec-email"
+                        type="email"
+                        required
+                        placeholder="Enter your email here..."
+                      />
+                      <button className="button btn-primary" type="submit">
+                        <i
+                          className="ecicon eci-paper-plane-o"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </form>
                   </div>
                 </div>
               </div>

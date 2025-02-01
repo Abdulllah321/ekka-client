@@ -20,6 +20,7 @@ import product14 from "../../assets/images/product-image/14_1.jpg";
 import product15 from "../../assets/images/product-image/15_1.jpg";
 import product16 from "../../assets/images/product-image/16_1.jpg";
 
+
 const vendors = [
   {
     id: 1,
@@ -60,6 +61,8 @@ const vendors = [
 ];
 
 const TopVendorSection = () => {
+
+
   return (
     <section className="section section-space-p" id="vendors">
       <div className="container">

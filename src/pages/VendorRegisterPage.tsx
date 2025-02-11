@@ -5,7 +5,7 @@ import { AppDispatch, useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../slices/authSlice";
 import toast from "react-hot-toast";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { DotLoader } from "react-spinners";
 
 const RegisterPage: React.FC = () => {

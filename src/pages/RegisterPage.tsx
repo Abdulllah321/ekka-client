@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
 import { DotLoader } from "react-spinners";
 
-const RegisterPage: React.FC = () => {
+const VendorRegisterPage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const [formData, setFormData] = useState<User>({
     firstName: "",
@@ -17,13 +17,14 @@ const RegisterPage: React.FC = () => {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
-    role: UserRole.customer,
+    role: UserRole.vendor,
   });
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { isLoading, error, isAuthenticated } = useAppSelector(
-    (state) => state.auth
+    (state) => state.auth,
   );
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -37,7 +38,8 @@ const RegisterPage: React.FC = () => {
     if (!formData.phoneNumber.trim())
       newErrors.phoneNumber = "Phone number is required.";
     else if (!/^\d{10}$/.test(formData.phoneNumber))
-      newErrors.phoneNumber = "Invalid phone number.";
+      newErrors.phoneNumber =
+        "Invalid phone number. (Write phone number without 0 and country Code)";
     if (!formData.password) newErrors.password = "Password is required.";
     else if (formData.password.length < 6)
       newErrors.password = "Password must be at least 6 characters.";
@@ -59,8 +61,8 @@ const RegisterPage: React.FC = () => {
     if (validateForm()) {
       try {
         await dispatch(registerUser(formData));
-        toast.success("Registration successful! Welcome aboard!");
-        navigate("/");
+        toast.success("Vendor registration successful!");
+        navigate("/vendor-dashboard");
       } catch (error) {
         toast.error("Registration failed. Please try again.");
       }
@@ -68,172 +70,80 @@ const RegisterPage: React.FC = () => {
       toast("Please fix the errors before submitting.", { icon: "⚠️" });
     }
   };
+
   if (isAuthenticated) {
-    return <Navigate to="/" />;
+    return <Navigate to="/vendor-dashboard" />;
   }
+
   return (
     <Layout>
-      <div className="sticky-header-next-sec ec-breadcrumb section-space-mb">
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <div className="row ec_breadcrumb_inner">
-                <div className="col-md-6 col-sm-12">
-                  <h2 className="ec-breadcrumb-title">Register</h2>
-                </div>
-                <div className="col-md-6 col-sm-12">
-                  <ul className="ec-breadcrumb-list">
-                    <li className="ec-breadcrumb-item">
-                      <a href="/">Home</a>
-                    </li>
-                    <li className="ec-breadcrumb-item active">Register</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div className="vendor-register-container">
+        <h2>Vendor Registration</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            placeholder="First Name"
+          />
+          {errors.firstName && <p className="error">{errors.firstName}</p>}
 
-      <section className="ec-page-content section-space-p">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12 text-center">
-              <div className="section-title">
-                <h2 className="ec-bg-title">Register</h2>
-                <h2 className="ec-title">Register</h2>
-                <p className="sub-title mb-3">
-                  Best place to buy and sell digital products
-                </p>
-              </div>
-            </div>
-            <div className="ec-register-wrapper">
-              <div className="ec-register-container">
-                <div className="ec-register-form">
-                  <form onSubmit={handleSubmit}>
-                    <span className="ec-register-wrap ec-register-half">
-                      <label>First Name*</label>
-                      <input
-                        type="text"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        placeholder="Enter your first name"
-                      />
-                      {errors.firstName && (
-                        <p
-                          className="error text-danger "
-                          style={{ marginTop: -20, marginBottom: 10 }}
-                        >
-                          {errors.firstName}
-                        </p>
-                      )}
-                    </span>
-                    <span className="ec-register-wrap ec-register-half">
-                      <label>Last Name*</label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        placeholder="Enter your last name"
-                      />
-                      {errors.lastName && (
-                        <p
-                          className="error text-danger "
-                          style={{ marginTop: -20, marginBottom: 10 }}
-                        >
-                          {errors.lastName}
-                        </p>
-                      )}
-                    </span>
-                    <span className="ec-register-wrap ec-register-half">
-                      <label>Email*</label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Enter your email"
-                      />
-                      {errors.email && (
-                        <p
-                          className="error text-danger "
-                          style={{ marginTop: -20, marginBottom: 10 }}
-                        >
-                          {errors.email}
-                        </p>
-                      )}
-                    </span>
-                    <span className="ec-register-wrap ec-register-half">
-                      <label>Phone Number*</label>
-                      <input
-                        type="text"
-                        name="phoneNumber"
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        placeholder="Enter your phone number"
-                      />
-                      {errors.phoneNumber && (
-                        <p
-                          className="error text-danger "
-                          style={{ marginTop: -20, marginBottom: 10 }}
-                        >
-                          {errors.phoneNumber}
-                        </p>
-                      )}
-                    </span>
-                    <span className="ec-register-wrap ec-register-half">
-                      <label>Password*</label>
-                      <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Enter your password"
-                      />
-                      {errors.password && (
-                        <p
-                          className="error text-danger "
-                          style={{ marginTop: -20, marginBottom: 10 }}
-                        >
-                          {errors.password}
-                        </p>
-                      )}
-                    </span>
-                    <span className="ec-register-wrap ec-register-half">
-                      <label>Confirm Password*</label>
-                      <input
-                        type="password"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        placeholder="Confirm your password"
-                      />
-                      {errors.confirmPassword && (
-                        <p
-                          className="error text-danger "
-                          style={{ marginTop: -20, marginBottom: 10 }}
-                        >
-                          {errors.confirmPassword}
-                        </p>
-                      )}
-                    </span>
-                    <span className="ec-register-wrap ec-register-btn">
-                      <button className="btn btn-primary" type="submit">
-                        {isLoading ? <DotLoader /> : "Register"}
-                      </button>
-                    </span>
-                  </form>{" "}
-                  {error && <div className="alert alert-danger">{error}</div>}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            placeholder="Last Name"
+          />
+          {errors.lastName && <p className="error">{errors.lastName}</p>}
+
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email"
+          />
+          {errors.email && <p className="error">{errors.email}</p>}
+
+          <input
+            type="text"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            placeholder="Phone Number"
+          />
+          {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
+
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Password"
+          />
+          {errors.password && <p className="error">{errors.password}</p>}
+
+          <input
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            placeholder="Confirm Password"
+          />
+          {errors.confirmPassword && (
+            <p className="error">{errors.confirmPassword}</p>
+          )}
+
+          <button type="submit" className="btn btn-primary">
+            {isLoading ? <DotLoader /> : "Register as Vendor"}
+          </button>
+        </form>
+        {error && <div className="alert alert-danger">{error}</div>}
+      </div>
     </Layout>
   );
 };
 
-export default RegisterPage;
+export default VendorRegisterPage;

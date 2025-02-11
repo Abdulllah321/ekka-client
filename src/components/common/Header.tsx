@@ -4,6 +4,7 @@ import { useAppSelector } from "../../store";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { UserRole } from "../../utils/types";
+import CurrencyDropdown from "./CurrencyDropdown.tsx";
 
 const Header = ({ toggleCart }: { toggleCart: () => void }) => {
   const { cartCount } = useAppSelector((state) => state.cart);
@@ -64,29 +65,7 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
             {/* Header Top Currency */}
             <div className="col header-top-right d-none d-lg-block">
               <div className="header-top-lan-curr d-flex justify-content-end">
-                {/* Currency Start */}
-                <div className="header-top-curr dropdown">
-                  <button
-                    className="dropdown-toggle text-upper"
-                    data-bs-toggle="dropdown"
-                  >
-                    Currency{" "}
-                    <i className="ecicon eci-caret-down" aria-hidden="true" />
-                  </button>
-                  <ul className="dropdown-menu">
-                    <li className="active">
-                      <a className="dropdown-item" href="#">
-                        USD $
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        INR
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                {/* Currency End */}
+                <CurrencyDropdown />
               </div>
             </div>
             {/* Header Top Currency End */}
@@ -236,6 +215,14 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                             <Link className="dropdown-item" to="/register">
                               Register
                             </Link>
+                          </li>{" "}
+                          <li>
+                            <Link
+                              className="dropdown-item"
+                              to="/vendor-register"
+                            >
+                              Register as Vendor
+                            </Link>
                           </li>
                           <li>
                             <Link className="dropdown-item" to="/login">
@@ -288,6 +275,12 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                   </li>
                   <li className={isActive("/shop")}>
                     <Link to={`/shop`}>Shop</Link>
+                  </li>
+                  <li className={isActive("/about")}>
+                    <Link to={`/about`}>About</Link>
+                  </li>
+                  <li className={isActive("/contact")}>
+                    <Link to={`/contact`}>Contact</Link>
                   </li>
                 </ul>
               </div>
@@ -388,13 +381,17 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                     <Link to="/shop" className="text-dark p-2 d-block">
                       Shop
                     </Link>
-                  </li>
+                  </li>{" "}
                   <li>
-                    <Link to="/wishlist" className="text-dark p-2 d-block">
-                      Wishlist
+                    <Link to="/about" className="text-dark p-2 d-block">
+                      About
                     </Link>
                   </li>
-
+                  <li>
+                    <Link to="/contact" className="text-dark p-2 d-block">
+                      Contact
+                    </Link>
+                  </li>
                   {isAuthenticated ? (
                     <>
                       <li>

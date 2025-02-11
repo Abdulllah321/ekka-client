@@ -1,10 +1,11 @@
 import React from "react";
 import { Order } from "../../utils/types";
-import { CURRENCY, getImageUrl } from "../../constants";
+import { getImageUrl } from "../../constants";
 import { Link } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import OrderStatusTd from "./OrderStatusTd";
 import { useAppDispatch } from "../../store";
+import { useCurrency } from "../../context/CurrencyContext.tsx";
 
 interface LatestOrderProps {
   orders: Order[];
@@ -20,6 +21,8 @@ const LatestOrder: React.FC<LatestOrderProps> = ({
   title = "Latest Order",
 }) => {
   const dispatch = useAppDispatch();
+  const { formatPrice } = useCurrency();
+
   return (
     <div className="ec-vendor-dashboard-card space-bottom-30">
       <div className="ec-vendor-card-header">
@@ -76,7 +79,9 @@ const LatestOrder: React.FC<LatestOrderProps> = ({
                         </td>
                         <OrderStatusTd order={order} dispatch={dispatch} />
                         <td>
-                          <span>{CURRENCY + order.totalAmount.toFixed(2)}</span>
+                          <span>
+                            {formatPrice(order.totalAmount.toFixed(2))}
+                          </span>
                         </td>
                         <td>
                           <div className="d-flex gap-2">
@@ -90,7 +95,7 @@ const LatestOrder: React.FC<LatestOrderProps> = ({
                           </div>
                         </td>
                       </tr>
-                    ))
+                    )),
                   )
                 ) : (
                   <tr>

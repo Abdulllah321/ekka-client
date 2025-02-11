@@ -10,7 +10,7 @@ import NoDataFound from "../components/common/NoDataFound";
 import ProductImageSliders from "../components/products/ProductImageSliders";
 import "swiper/css";
 import "swiper/css/navigation";
-import { CURRENCY, getPrice } from "../constants";
+import { getPrice } from "../constants";
 import ReviewForm from "../components/products/ProductReviewsForm";
 import Reviews from "../components/products/ProductReviews";
 import RelatedProducts from "../components/products/RelatedProducts";
@@ -19,6 +19,7 @@ import { addToCart, getCartCount } from "../slices/cartSlice";
 import { addToWishlist, removeFromWishlist } from "../slices/wishlistslice";
 import QuickViewModal from "../components/products/QuickViewModal ";
 import { AnimatePresence } from "framer-motion";
+import { useCurrency } from "../context/CurrencyContext.tsx";
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
@@ -34,13 +35,14 @@ const ProductDetailPage = () => {
   const { cartItems } = useAppSelector((state) => state.cart);
 
   const { productDetails, loading, error } = useAppSelector(
-    (state) => state.products
+    (state) => state.products,
   );
   const wishlist = items.find((item) => item.productId === productDetails?.id);
   const [quantity, setQuantity] = useState<number>(1);
   const [isQuickView, setIsQuickView] = useState<boolean>(false);
   const [isInCart, setIsInCart] = useState<boolean>(false);
   const { execute } = useAuthenticatedAction();
+  const { formatPrice } = useCurrency();
 
   useEffect(() => {
     dispatch(fetchProductBySlug(slug!));
@@ -48,7 +50,7 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     const productInCart = cartItems.find(
-      (item) => item.productId === productDetails?.id!
+      (item) => item.productId === productDetails?.id!,
     );
     if (productInCart) {
       setIsInCart(true);
@@ -202,10 +204,12 @@ const ProductDetailPage = () => {
                                 className="old-price "
                                 style={{ textDecoration: "line-through" }}
                               >
-                                {CURRENCY + productDetails.price}
+                                {formatPrice(productDetails.price)}
                               </span>
                               <span className="new-price">
-                                {CURRENCY + getPrice(productDetails)}
+                                {formatPrice(
+                                  getPrice(productDetails) as number,
+                                )}
                               </span>
                             </div>
                           </div>
@@ -289,7 +293,7 @@ const ProductDetailPage = () => {
                                           style={{ backgroundColor: color }}
                                         />{" "}
                                       </li>
-                                    )
+                                    ),
                                   )}
                                 </ul>
                               </ul>

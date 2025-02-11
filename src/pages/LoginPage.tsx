@@ -87,13 +87,23 @@ const LoginPage: React.FC = () => {
 
                     <div className="col-md-12">
                       <button
-                        type="submit"
-                        className="btn btn-primary btn-block mb-4"
-                        disabled={isLoading} // Disable button when loading
+                          type="submit"
+                          className="btn btn-primary btn-block mb-4"
+                          disabled={isLoading} // Disable button when loading
                       >
                         {isLoading ? "Signing In..." : "Sign In"}
                       </button>
                     </div>
+
+                    <div className="col-md-12 text-center mt-3">
+                      <p>
+                        Don't have an account?{" "}
+                        <Link to="/register" className="text-primary">
+                          Sign Up here
+                        </Link>
+                      </p>
+                    </div>
+
                   </div>
                 </form>
                 {error && (

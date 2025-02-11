@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Product } from "../../utils/types";
 import ProductImageSliders from "./ProductImageSliders";
 import { Link } from "react-router-dom";
-import { CURRENCY } from "../../constants";
+import { useCurrency } from "../../context/CurrencyContext.tsx";
 
 interface QuickViewModalProps {
   product: Product;
@@ -26,6 +26,7 @@ const QuickViewModal = ({
 }: QuickViewModalProps) => {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const { formatPrice } = useCurrency();
 
   const handleColorSelect = (color: string) => {
     setSelectedColor(color);
@@ -109,12 +110,10 @@ const QuickViewModal = ({
                     </div>
                     <div className="ec-quickview-price">
                       <span className="old-price">
-                        {CURRENCY}
-                        {product.discountPrice}
+                        {formatPrice(product.discountPrice as number)}
                       </span>
                       <span className="new-price">
-                        {CURRENCY}
-                        {product.price}
+                        {formatPrice(product.price)}
                       </span>
                     </div>
 

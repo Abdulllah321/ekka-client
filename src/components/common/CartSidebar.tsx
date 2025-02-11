@@ -7,10 +7,11 @@ import {
   updateQuantity,
 } from "../../slices/cartSlice";
 import { Link } from "react-router-dom";
-import { CURRENCY, getImageUrl } from "../../constants";
+import { getImageUrl } from "../../constants";
 import { useState } from "react";
 import { fetchCouponByCode } from "../../slices/couponSlice";
 import toast from "react-hot-toast";
+import { useCurrency } from "../../context/CurrencyContext.tsx";
 
 const CartSidebar = ({
   isCartBarVisible,
@@ -21,6 +22,7 @@ const CartSidebar = ({
 }) => {
   const dispatch = useAppDispatch();
   const { cartItems, coupon } = useAppSelector((state) => state.cart);
+  const { formatPrice, currency } = useCurrency();
 
   const [isCouponPopup, setIsCouponPopup] = useState<boolean>(false);
   const [couponCode, setCouponCode] = useState<string | null>(null);
@@ -28,7 +30,7 @@ const CartSidebar = ({
   const handleRemoveItem = async (id: string) => {
     try {
       await dispatch(removeFromCart(id)).unwrap();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(error);
       toast.error("Failed to remove item from cart");
     }
@@ -38,21 +40,21 @@ const CartSidebar = ({
     try {
       await dispatch(updateQuantity({ productId, quantity })).unwrap();
       await dispatch(getCartCount()).unwrap();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(error);
-      toast.error(error || "Failed to update quantity");
+      toast.error((error as string) || "Failed to update quantity");
     }
   };
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.quantity * (item.product.price || 0),
-    0
+    0,
   );
 
   // Calculate delivery charge (sum of product shipping fees or default to 100)
   const deliveryCharge = cartItems.reduce(
     (total, item) => total + (item.product.shippingFee || 100),
-    0
+    0,
   );
   const totalAmount = subtotal + deliveryCharge;
 
@@ -67,7 +69,7 @@ const CartSidebar = ({
       } else {
         toast.error("Please enter a coupon code.");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(error);
       toast.error("Invalid Coupon Code.");
     }
@@ -131,8 +133,8 @@ const CartSidebar = ({
                             value={item.quantity}
                             onChange={(e) =>
                               handleUpdateQuantity(
-                                item.product?.id!,
-                                parseInt(e.target.value, 10)
+                                item?.product?.id!,
+                                parseInt(e.target.value, 10),
                               )
                             }
                           />
@@ -158,15 +160,13 @@ const CartSidebar = ({
                     <tr>
                       <td className="text-left">Sub-Total :</td>
                       <td className="text-right">
-                        {CURRENCY}
-                        {subtotal.toFixed(2)}
+                        {formatPrice(subtotal.toFixed(2))}
                       </td>
                     </tr>
                     <tr>
                       <td className="text-left">Delivery Charges:</td>
                       <td className="text-right">
-                        {CURRENCY}
-                        {deliveryCharge.toFixed(2)}
+                        {formatPrice(deliveryCharge.toFixed(2))}
                       </td>
                     </tr>
                     <div>
@@ -178,7 +178,7 @@ const CartSidebar = ({
                           -{coupon.discountAmount}
                           {coupon.discountType === "percentage"
                             ? "%"
-                            : CURRENCY}
+                            : currency}
                         </span>
                       ) : (
                         <span
@@ -227,8 +227,7 @@ const CartSidebar = ({
                     <tr>
                       <td className="text-left">Total :</td>
                       <td className="text-right primary-color">
-                        {CURRENCY}
-                        {totalAmount.toFixed(2)}
+                        {formatPrice(totalAmount.toFixed(2))}
                       </td>
                     </tr>
                   </tbody>

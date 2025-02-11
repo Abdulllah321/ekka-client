@@ -6,7 +6,7 @@ import { getOrderById } from "../slices/orderSlice";
 import NoDataFound from "../components/common/NoDataFound";
 import Loader from "../components/common/Loader";
 import Layout from "../components/common/Layout";
-import { CURRENCY } from "../constants";
+import { useCurrency } from "../context/CurrencyContext.tsx";
 
 const OrderSuccessPage = () => {
   const { id } = useParams();
@@ -15,6 +15,7 @@ const OrderSuccessPage = () => {
   useEffect(() => {
     dispatch(getOrderById(id!));
   }, [id]);
+  const { formatPrice } = useCurrency();
 
   if (!currentOrder)
     return (
@@ -31,7 +32,7 @@ const OrderSuccessPage = () => {
   const deliveryCharge =
     currentOrder.orderItems?.reduce(
       (total, item) => total + (item.product?.shippingFee || 100),
-      0
+      0,
     ) || 100;
   const subtotal =
     currentOrder.orderItems?.reduce((total, item) => total + item.price, 0) ||
@@ -59,21 +60,21 @@ const OrderSuccessPage = () => {
             <span className="font-weight-bold">
               {order.product?.name}(Qty:{order.quantity})
             </span>
-            <span className="text-muted">{CURRENCY + order.price}</span>
+            <span className="text-muted">{formatPrice(order.price)}</span>
           </div>
         ))}
         <div className="d-flex justify-content-between">
           <small>Shipping</small>
-          <small>{CURRENCY + deliveryCharge}</small>
+          <small>{formatPrice(deliveryCharge)}</small>
         </div>
         <div className="d-flex justify-content-between">
           <small>Discount</small>
-          <small>{CURRENCY + discount.toFixed(2)}</small>
+          <small>{formatPrice(discount.toFixed(2))}</small>
         </div>
         <div className="d-flex justify-content-between mt-3">
           <span className="font-weight-bold">Total</span>
           <span className="font-weight-bold theme-color">
-            {CURRENCY + currentOrder.totalAmount}
+            {formatPrice(currentOrder.totalAmount)}
           </span>
         </div>
         <div className="text-center mt-5">

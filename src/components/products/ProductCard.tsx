@@ -1,6 +1,6 @@
 import { Product } from "../../utils/types";
 import { Link } from "react-router-dom";
-import { CURRENCY, getImageUrl, getPrice } from "../../constants";
+import { getImageUrl, getPrice } from "../../constants";
 import { AppDispatch, useAppSelector } from "../../store";
 import { useDispatch } from "react-redux";
 import { addToCart, getCartCount } from "../../slices/cartSlice";
@@ -10,6 +10,7 @@ import { useAuthenticatedAction } from "../../utils/useAuthenticatedAction";
 import { useEffect, useState } from "react";
 import QuickViewModal from "./QuickViewModal ";
 import { AnimatePresence } from "framer-motion";
+import { useCurrency } from "../../context/CurrencyContext.tsx";
 
 const ProductCard = ({
   product,
@@ -29,6 +30,8 @@ const ProductCard = ({
   const dispatch: AppDispatch = useDispatch();
   const { items } = useAppSelector((state) => state.wishlist);
   const { cartItems } = useAppSelector((state) => state.cart);
+  const { formatPrice } = useCurrency();
+
   const [selected, setSelected] = useState<{
     selectedColor: string | null;
     selectedSize: string | null;
@@ -44,7 +47,7 @@ const ProductCard = ({
   useEffect(() => {
     // Check if the product is already in the cart
     const productInCart = cartItems.find(
-      (item) => item.productId === product?.id!
+      (item) => item.productId === product?.id!,
     );
     if (productInCart) {
       setIsInCart(true);
@@ -216,14 +219,10 @@ const ProductCard = ({
             <span className="ec-price">
               {product.price && (
                 <span className="old-price">
-                  {CURRENCY}
-                  {getPrice(product)}
+                  {formatPrice(getPrice(product!) as number)}
                 </span>
               )}
-              <span className="new-price">
-                {CURRENCY}
-                {product.price}
-              </span>
+              <span className="new-price">{formatPrice(product.price)}</span>
             </span>
             <div className="ec-pro-option">
               <div className="ec-pro-color">

@@ -7,13 +7,15 @@ import { getOrderById, updateOrderStatus } from "../slices/orderSlice";
 import NoDataFound from "../components/common/NoDataFound";
 import Loader from "../components/common/Loader";
 import { OrderStatus } from "../utils/types";
-import { CURRENCY, getImageUrl, getPrice } from "../constants";
+import { getImageUrl, getPrice } from "../constants";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaFileInvoice } from "react-icons/fa";
+import { useCurrency } from "../context/CurrencyContext.tsx";
 const TrackOrderPage = () => {
   const { id } = useParams();
   const dispatch: AppDispatch = useDispatch();
   const { currentOrder, loading } = useAppSelector((state) => state.order);
+  const { formatPrice } = useCurrency();
 
   useEffect(() => {
     dispatch(getOrderById(id!));
@@ -90,7 +92,7 @@ const TrackOrderPage = () => {
                   <div>
                     Expected arrival{" "}
                     {new Date(
-                      currentOrder?.expectedDeliveryDate ?? ""
+                      currentOrder?.expectedDeliveryDate ?? "",
                     ).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "long",
@@ -334,7 +336,7 @@ const TrackOrderPage = () => {
                           style={{ padding: "10px" }}
                         >
                           {new Date(
-                            currentOrder.createdAt!
+                            currentOrder.createdAt!,
                           )?.toLocaleDateString("en-US", {
                             year: "numeric",
                             month: "long",
@@ -443,16 +445,16 @@ const TrackOrderPage = () => {
                                   {order.product?.shortDesc}
                                 </td>
                                 <td className="text-center">
-                                  {CURRENCY}
-                                  {getPrice(order.product!)}
+                                  {formatPrice(
+                                    getPrice(order.product!) as number,
+                                  )}
                                 </td>
                                 <td className="text-center">
                                   {order.quantity}
                                 </td>
                                 <td className="text-right">
                                   {" "}
-                                  {CURRENCY}
-                                  {order.price}
+                                  {formatPrice(order.price)}
                                 </td>
                               </tr>
                             ))}

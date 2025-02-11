@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Product } from "../../utils/types";
-import { CURRENCY, getImageUrl } from "../../constants";
+import { getImageUrl } from "../../constants";
 import { useNavigate } from "react-router-dom";
 import Modal from "../common/Modal";
 import { useAppDispatch } from "../../store";
 import { deleteProduct } from "../../slices/productSlice";
 import toast from "react-hot-toast";
 import { fetchUserStores } from "../../slices/storeSlice";
+import { useCurrency } from "../../context/CurrencyContext.tsx";
 
 interface ProductListProps {
   products: Product[];
@@ -22,6 +23,7 @@ const ProductList: React.FC<ProductListProps> = ({
   const navigate = useNavigate();
   const [isDelete, setIsDelete] = useState<Product | null>(null); // Store the product to delete
   const dispatch = useAppDispatch();
+  const { formatPrice } = useCurrency();
 
   const handleDelete = async () => {
     if (isDelete) {
@@ -82,10 +84,7 @@ const ProductList: React.FC<ProductListProps> = ({
                       <span>{product.name}</span>
                     </td>
                     <td>
-                      <span>
-                        {CURRENCY}
-                        {product.price.toFixed(2)}
-                      </span>
+                      <span>{formatPrice(product.price.toFixed(2))}</span>
                     </td>
                     <td>
                       <span className={``}>

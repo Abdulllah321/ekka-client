@@ -14,13 +14,14 @@ import {
   FaTimesCircle,
   FaTruck,
 } from "react-icons/fa";
-import { CURRENCY } from "../constants";
 import { formatDistanceToNow, differenceInDays } from "date-fns";
 import { ProfileSidebar } from "./ProfilePage";
+import { useCurrency } from "../context/CurrencyContext.tsx";
 
 const OrdersPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const { orders } = useAppSelector((state) => state.order);
+  const { formatPrice } = useCurrency();
 
   useEffect(() => {
     dispatch(fetchOrderByUser());
@@ -155,7 +156,7 @@ const OrdersPage = () => {
                         </td>
                         <td>
                           <strong>
-                            {CURRENCY + order.totalAmount.toFixed(2)}
+                            {formatPrice(order.totalAmount.toFixed(2))}
                           </strong>
                         </td>
                         <td>{formatOrderDate(order.createdAt)}</td>

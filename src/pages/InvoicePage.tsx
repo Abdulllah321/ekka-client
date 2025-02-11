@@ -6,17 +6,18 @@ import { getOrderById } from "../slices/orderSlice";
 import NoDataFound from "../components/common/NoDataFound";
 import Loader from "../components/common/Loader";
 import { ProfileSidebar } from "./ProfilePage";
-import { CURRENCY } from "../constants";
 import Layout from "../components/common/Layout";
 import html2canvas from "html2canvas";
 import * as XLSX from "xlsx";
 import generatePDF from "react-to-pdf";
+import { useCurrency } from "../context/CurrencyContext.tsx";
 
 const Invoice = () => {
   const { id } = useParams();
   const dispatch: AppDispatch = useDispatch();
   const { currentOrder, loading } = useAppSelector((state) => state.order);
   const invoiceRef = useRef<HTMLDivElement>(null);
+  const { formatPrice } = useCurrency();
 
   useEffect(() => {
     dispatch(getOrderById(id!));
@@ -76,7 +77,7 @@ const Invoice = () => {
       {
         Label: "Expected Delivery Date",
         Value: new Date(
-          currentOrder.expectedDeliveryDate ?? Date.now()
+          currentOrder.expectedDeliveryDate ?? Date.now(),
         ).toLocaleDateString(),
       },
       { Label: "Status", Value: currentOrder.status },
@@ -291,17 +292,15 @@ const Invoice = () => {
                                           <span>{item.quantity}</span>
                                         </td>
                                         <td>
-                                          <span>
-                                            {CURRENCY}
-                                            {item.price}
-                                          </span>
+                                          <span>{formatPrice(item.price)}</span>
                                         </td>
                                         <td>
                                           <span>
-                                            {CURRENCY}
-                                            {(
-                                              item.quantity * item.price
-                                            ).toFixed(2)}
+                                            {formatPrice(
+                                              (
+                                                item.quantity * item.price
+                                              ).toFixed(2),
+                                            )}
                                           </span>
                                         </td>
                                       </tr>
@@ -329,9 +328,10 @@ const Invoice = () => {
                                         <span>
                                           <b>
                                             {" "}
-                                            {CURRENCY}
-                                            {currentOrder.totalAmount.toFixed(
-                                              2
+                                            {formatPrice(
+                                              currentOrder.totalAmount.toFixed(
+                                                2,
+                                              ),
                                             )}
                                           </b>
                                         </span>

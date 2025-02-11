@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import Layout from "../components/common/Layout";
 import { AppDispatch, useAppSelector } from "../store";
 import Loader from "../components/common/Loader";
-import { CURRENCY, getImageUrl } from "../constants";
+import { getImageUrl } from "../constants";
 import toast from "react-hot-toast";
 import {
   applyCoupon,
@@ -17,6 +17,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { fetchCouponByCode } from "../slices/couponSlice";
 import { ClipLoader } from "react-spinners";
+import { useCurrency } from "../context/CurrencyContext.tsx";
 
 const CartPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -24,6 +25,7 @@ const CartPage = () => {
   const [isCouponPopup, setIsCouponPopup] = useState<boolean>(false);
   const [couponCode, setCouponCode] = useState<string | null>(null);
   const { cartItems, loading, coupon } = useAppSelector((state) => state.cart);
+  const { formatPrice, currency } = useCurrency();
 
   useEffect(() => {
     dispatch(getCart());
@@ -92,13 +94,13 @@ const CartPage = () => {
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.quantity * (item.product.price || 0),
-    0
+    0,
   );
 
   // Calculate delivery charge (sum of product shipping fees or default to 100)
   const deliveryCharge = cartItems.reduce(
     (total, item) => total + (item.product.shippingFee || 100),
-    0
+    0,
   );
   const totalAmount = subtotal + deliveryCharge;
 
@@ -160,7 +162,7 @@ const CartPage = () => {
                                     <img
                                       className="ec-cart-pro-img mr-4"
                                       src={getImageUrl(
-                                        cartItem.product.thumbnail
+                                        cartItem.product.thumbnail,
                                       )}
                                       alt={cartItem.product.name}
                                     />
@@ -172,8 +174,7 @@ const CartPage = () => {
                                   className="ec-cart-pro-price"
                                 >
                                   <span className="amount">
-                                    {CURRENCY}
-                                    {cartItem.product.price}
+                                    {formatPrice(cartItem.product.price)}
                                   </span>
                                 </td>
                                 <td
@@ -188,7 +189,7 @@ const CartPage = () => {
                                       onClick={() =>
                                         handleQuantityChange(
                                           cartItem.product.id!,
-                                          cartItem.quantity - 1
+                                          cartItem.quantity - 1,
                                         )
                                       }
                                       disabled={
@@ -208,7 +209,7 @@ const CartPage = () => {
                                         onChange={(e) =>
                                           handleQuantityChange(
                                             cartItem.product.id!,
-                                            parseInt(e.target.value, 10)
+                                            parseInt(e.target.value, 10),
                                           )
                                         }
                                       />
@@ -219,7 +220,7 @@ const CartPage = () => {
                                       onClick={() =>
                                         handleQuantityChange(
                                           cartItem.product.id!,
-                                          cartItem.quantity + 1
+                                          cartItem.quantity + 1,
                                         )
                                       }
                                       disabled={loading}
@@ -233,8 +234,9 @@ const CartPage = () => {
                                   data-label="Total"
                                   className="ec-cart-pro-subtotal"
                                 >
-                                  {CURRENCY}
-                                  {cartItem.product.price * cartItem.quantity}
+                                  {formatPrice(
+                                    cartItem.product.price * cartItem.quantity,
+                                  )}
                                 </td>
                                 <td
                                   data-label="Remove"
@@ -284,13 +286,13 @@ const CartPage = () => {
                         <div>
                           <span className="text-left">Sub-Total</span>
                           <span className="text-right">
-                            {CURRENCY + subtotal}
+                            {formatPrice(subtotal)}
                           </span>
                         </div>
                         <div>
                           <span className="text-left">Delivery Charges</span>
                           <span className="text-right">
-                            {CURRENCY + deliveryCharge}
+                            {formatPrice(deliveryCharge)}
                           </span>
                         </div>
                         <div>
@@ -303,7 +305,7 @@ const CartPage = () => {
                               -{coupon.discountAmount}
                               {coupon.discountType === "percentage"
                                 ? "%"
-                                : CURRENCY}
+                                : currency}
                             </span>
                           ) : (
                             <span
@@ -354,7 +356,7 @@ const CartPage = () => {
                         <div className="ec-cart-summary-total">
                           <span className="text-left">Total Amount</span>
                           <span className="text-right">
-                            {CURRENCY + totalAmount}
+                            {formatPrice(totalAmount)}
                           </span>
                         </div>
                       </div>

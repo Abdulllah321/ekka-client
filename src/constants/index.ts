@@ -1,4 +1,3 @@
-
 import { Product } from "../utils/types";
 
 export const generateSlug = (name: string): string => {

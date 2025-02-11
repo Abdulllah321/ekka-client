@@ -1,5 +1,5 @@
 import React from "react";
-import { CURRENCY } from "../../constants";
+import { useCurrency } from "../../context/CurrencyContext.tsx";
 
 interface DashboardStats {
   products: number;
@@ -15,6 +15,8 @@ interface VendorDashboardStatsProps {
 const VendorDashboardStats: React.FC<VendorDashboardStatsProps> = ({
   stats,
 }) => {
+  const { formatPrice } = useCurrency();
+
   return (
     <div className="row">
       <div className="col-lg-3 col-md-6">
@@ -32,7 +34,7 @@ const VendorDashboardStats: React.FC<VendorDashboardStatsProps> = ({
       <div className="col-lg-3 col-md-6">
         <div className="ec-vendor-dashboard-sort-card color-green">
           <h5>Total Earnings</h5>
-          <h3>{CURRENCY}{stats.totalEarnings.toFixed(2)}</h3>
+          <h3>{formatPrice(stats.totalEarnings.toFixed(2))}</h3>
         </div>
       </div>
       <div className="col-lg-3 col-md-6">

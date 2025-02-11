@@ -6,7 +6,7 @@ import { AppDispatch, useAppSelector } from "../store";
 import { useDispatch } from "react-redux";
 import { addAddress, fetchAddresses } from "../slices/userSlice";
 import AddressDetails from "../components/checkout/AddressDetails";
-import { CURRENCY, getImageUrl, getPrice } from "../constants";
+import { getImageUrl, getPrice } from "../constants";
 import { fetchCouponByCode } from "../slices/couponSlice";
 import { applyCoupon, clearCart, getCart } from "../slices/cartSlice";
 import toast from "react-hot-toast";
@@ -16,6 +16,7 @@ import NoDataFound from "../components/common/NoDataFound";
 import { ClipLoader } from "react-spinners";
 import { createOrder } from "../slices/orderSlice";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useCurrency } from "../context/CurrencyContext.tsx";
 
 const CheckoutPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -23,8 +24,10 @@ const CheckoutPage = () => {
     undefined | "existing" | "new"
   >("new");
   const { addresses, loading: addressLoading } = useAppSelector(
-    (state) => state.user
+    (state) => state.user,
   );
+  const { formatPrice, currency } = useCurrency();
+
   const { cart, coupon, loading } = useAppSelector((state) => state.cart);
   const [address, setAddress] = useState<Address>({
     addressType: AddressType.BILLING,
@@ -52,7 +55,7 @@ const CheckoutPage = () => {
   }, []);
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
     setAddress((prevAddress) => ({
@@ -75,13 +78,13 @@ const CheckoutPage = () => {
 
   const subtotal = cart?.cartItems.reduce(
     (sum, item) => sum + item.quantity * (item.product.price || 0),
-    0
+    0,
   );
 
   // Calculate delivery charge (sum of product shipping fees or default to 100)
   const deliveryCharge = cart?.cartItems.reduce(
     (total, item) => total + (item.product.shippingFee || 100),
-    0
+    0,
   );
   const discount = coupon
     ? coupon.discountType === "percentage"
@@ -110,7 +113,7 @@ const CheckoutPage = () => {
   const handleOrder = async () => {
     try {
       const storeIds = cart?.cartItems.map(
-        (item) => item.product.storeId
+        (item) => item.product.storeId,
       ) as string[];
       if (!selectedAddress) return toast.error("Please select an address");
       const orderItems: Order = {
@@ -299,13 +302,13 @@ const CheckoutPage = () => {
                           <div>
                             <span className="text-left">Sub-Total</span>
                             <span className="text-right">
-                              {CURRENCY + subtotal}
+                              {formatPrice(subtotal as number)}
                             </span>
                           </div>
                           <div>
                             <span className="text-left">Delivery Charges</span>
                             <span className="text-right">
-                              {CURRENCY + deliveryCharge}
+                              {formatPrice(deliveryCharge as number)}
                             </span>
                           </div>
                           <div>
@@ -318,7 +321,7 @@ const CheckoutPage = () => {
                                 -{coupon.discountAmount}
                                 {coupon.discountType === "percentage"
                                   ? "%"
-                                  : CURRENCY}
+                                  : currency}
                               </span>
                             ) : (
                               <span
@@ -373,7 +376,7 @@ const CheckoutPage = () => {
                             <span className="text-left">Total Amount</span>
                             <span className="text-right">
                               {" "}
-                              {CURRENCY + totalAmount}
+                              {formatPrice(totalAmount)}
                             </span>
                           </div>
                         </div>
@@ -390,14 +393,14 @@ const CheckoutPage = () => {
                                       <img
                                         className="main-image"
                                         src={getImageUrl(
-                                          item.product.thumbnail
+                                          item.product.thumbnail,
                                         )}
                                         alt="Product"
                                       />
                                       <img
                                         className="hover-image"
                                         src={getImageUrl(
-                                          item.product.imageUrls[0]
+                                          item.product.imageUrls[0],
                                         )}
                                         alt="Product"
                                       />
@@ -426,11 +429,12 @@ const CheckoutPage = () => {
                                   ) : null}
                                   <span className="ec-price">
                                     <span className="old-price">
-                                      {CURRENCY}
-                                      {getPrice(item.product)}
+                                      {formatPrice(
+                                        getPrice(item.product) as number,
+                                      )}
                                     </span>
                                     <span className="new-price">
-                                      {CURRENCY + item.product.price}
+                                      {formatPrice(item.product.price)}
                                     </span>
                                   </span>
                                   <div className="ec-pro-option">
@@ -545,7 +549,7 @@ const CheckoutPage = () => {
                                 }
                                 onChange={() =>
                                   setSelectedPaymentMethod(
-                                    PaymentMethod.RAZORPAY
+                                    PaymentMethod.RAZORPAY,
                                   )
                                 }
                               />

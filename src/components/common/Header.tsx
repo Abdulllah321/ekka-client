@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { UserRole } from "../../utils/types";
 import CurrencyDropdown from "./CurrencyDropdown.tsx";
+import SearchBar from "./SearchBar.tsx";
 
 const Header = ({ toggleCart }: { toggleCart: () => void }) => {
   const { cartCount } = useAppSelector((state) => state.cart);
@@ -165,20 +166,7 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
               </div>
               {/* Ec Header Logo End */}
               {/* Ec Header Search Start */}
-              <div className="align-self-center">
-                <div className="header-search">
-                  <form className="ec-btn-group-form" action="#">
-                    <input
-                      className="form-control ec-search-bar"
-                      placeholder="Search products..."
-                      type="text"
-                    />
-                    <button className="submit" type="submit">
-                      <i className="fi-rr-search" />
-                    </button>
-                  </form>
-                </div>
-              </div>
+              <SearchBar />
               {/* Ec Header Search End */}
               {/* Ec Header Button Start */}
               <div className="align-self-center">

@@ -235,7 +235,7 @@ const Header = ({ toggleCart }: { toggleCart: () => void }) => {
                   {/* Header Wishlist End */}
                   {/* Header Cart Start */}
                   <a
-                    href="#ec-side-cart"
+                    href="# ec-side-cart"
                     className="ec-header-btn ec-side-toggle"
                     onClick={toggleCart}
                   >

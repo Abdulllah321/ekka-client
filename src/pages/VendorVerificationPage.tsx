@@ -17,6 +17,7 @@ const VerifyVendor = () => {
   const [isOtpSent, setIsOtpSent] = useState<boolean>(false);
   const [resendCooldown, setResendCooldown] = useState<number>(0);
   const email = useAppSelector((state) => state.auth.user?.email);
+  console.log(email)
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 

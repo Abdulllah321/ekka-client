@@ -117,7 +117,7 @@ export const resetPasswordWithOtp = createAsyncThunk(
   }
 );
 // Reset Password with OTP
-export const verifyOtp = createAsyncThunk(
+export const verifyOtp = createAsyncThunk( 
   "auth/verifyOtp",
   async (resetData: { email: string; otp: string }, { rejectWithValue }) => {
     try {
